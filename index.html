@@ -343,15 +343,35 @@ function showPage(pageId, button){
 }
 
 auth.onAuthStateChanged(user => {
-  if(user){
-    $("loginScreen").style.display = "none";
-    $("app").style.display = "block";
-    $("userEmail").textContent = user.email;
+  console.log("Auth user:", user);
 
-    loadFirebaseData(user.uid);
-  }else{
-    $("loginScreen").style.display = "flex";
-    $("app").style.display = "none";
+  if (user) {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    const emailBox = document.getElementById("userEmail");
+
+    if (emailBox) {
+      emailBox.textContent = user.email || "";
+    }
+
+    try {
+      loadFirebaseData(user.uid);
+    } catch (error) {
+      console.error("Database loading error:", error);
+
+      const status = document.getElementById("status");
+
+      if (status) {
+        status.textContent =
+          "Dashboard खुल गया है, लेकिन Firebase Database connect नहीं हुआ: " +
+          error.message;
+      }
+    }
+
+  } else {
+    document.getElementById("loginScreen").style.display = "flex";
+    document.getElementById("app").style.display = "none";
   }
 });
 

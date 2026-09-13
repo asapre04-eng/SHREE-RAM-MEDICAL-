@@ -5,451 +5,191 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shree Ram Medical - Pharmacy ERP</title>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 <style>
-:root{
-  --blue:#155eef;
-  --dark:#0f172a;
-  --muted:#64748b;
-  --bg:#f4f7fb;
-  --card:#ffffff;
-  --line:#e2e8f0;
-  --danger:#dc2626;
-  --green:#15803d;
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+button,input,select{font:inherit}
+button{border:0;border-radius:9px;padding:11px 15px;background:#155eef;color:white;font-weight:bold;cursor:pointer}
+button.red{background:#dc2626}
+button.gray{background:#e2e8f0;color:#172033}
+header{background:linear-gradient(135deg,#123b91,#155eef);color:white;padding:17px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+header h2{margin:0;font-size:21px}
+.layout{display:flex;min-height:calc(100vh - 75px)}
+aside{width:230px;background:#0f172a;padding:15px}
+aside button{display:block;width:100%;text-align:left;background:transparent;color:#cbd5e1;margin:5px 0}
+aside button.active,aside button:hover{background:#1d4ed8;color:white}
+main{flex:1;padding:20px;min-width:0}
+.page{display:none}.page.active{display:block}
+.card{background:white;border:1px solid #e2e8f0;border-radius:15px;padding:17px;margin-bottom:17px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.metric{font-size:28px;font-weight:bold;margin-top:8px}
+.small{font-size:13px;color:#64748b}
+form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:13px;font-weight:bold}
+input,select{padding:11px;border:1px solid #cbd5e1;border-radius:8px;width:100%;background:white}
+.actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;background:white}
+th,td{padding:11px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:13px;white-space:nowrap}
+th{background:#eff6ff}
+.badge{padding:4px 8px;border-radius:20px;background:#dcfce7;color:#15803d;font-size:12px}
+.badge.red{background:#fee2e2;color:#dc2626}
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0f2c70,#155eef)}
+.loginBox{background:white;width:100%;max-width:390px;padding:25px;border-radius:18px}
+.loginBox h1{margin-top:0;color:#123b91}
+.loginBox input{margin:7px 0 12px}
+#error{color:#dc2626;font-size:13px;margin:8px 0}
+#app{display:none}
+@media(max-width:800px){
+ aside{width:70px;padding:10px 6px}
+ aside button{font-size:0;text-align:center}
+ aside button:first-letter{font-size:20px}
+ main{padding:12px}
+ .grid{grid-template-columns:repeat(2,1fr)}
+ form{grid-template-columns:1fr 1fr}
 }
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  font-family:Arial,system-ui,sans-serif;
-  background:var(--bg);
-  color:var(--dark);
-}
-
-button,
-input,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-  border:0;
-  border-radius:10px;
-  padding:11px 15px;
-  background:var(--blue);
-  color:white;
-  font-weight:700;
-}
-
-button.secondary{
-  background:#e2e8f0;
-  color:#0f172a;
-}
-
-button.danger{
-  background:var(--danger);
-}
-
-header{
-  background:linear-gradient(135deg,#123b91,#155eef);
-  color:white;
-  padding:18px 22px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-header h1{
-  font-size:21px;
-  margin:0;
-}
-
-header small{
-  opacity:.8;
-}
-
-.layout{
-  display:flex;
-  min-height:calc(100vh - 78px);
-}
-
-aside{
-  width:235px;
-  background:#0f172a;
-  color:white;
-  padding:18px 12px;
-}
-
-aside button{
-  display:block;
-  width:100%;
-  text-align:left;
-  background:transparent;
-  margin:5px 0;
-  color:#cbd5e1;
-}
-
-aside button.active,
-aside button:hover{
-  background:#1e40af;
-  color:white;
-}
-
-main{
-  flex:1;
-  padding:22px;
-  min-width:0;
-}
-
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
-}
-
-.topline{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
-h2{
-  margin-top:0;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:15px;
-  margin:18px 0;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:18px;
-  box-shadow:0 5px 18px #0f172a0a;
-}
-
-.metric{
-  font-size:28px;
-  font-weight:800;
-  margin-top:8px;
-}
-
-.muted{
-  color:var(--muted);
-  font-size:13px;
-}
-
-form{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
-.field{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.field label{
-  font-size:13px;
-  font-weight:700;
-}
-
-.field input,
-.field select{
-  padding:11px;
-  border:1px solid #cbd5e1;
-  border-radius:9px;
-  background:white;
-  width:100%;
-}
-
-.form-actions{
-  grid-column:1/-1;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-  border-radius:12px;
-  overflow:hidden;
-}
-
-th,
-td{
-  padding:12px;
-  border-bottom:1px solid var(--line);
-  text-align:left;
-  font-size:13px;
-}
-
-th{
-  background:#eff6ff;
-}
-
-.table-wrap{
-  overflow:auto;
-  margin-top:15px;
-}
-
-.tag{
-  padding:4px 8px;
-  border-radius:20px;
-  background:#dcfce7;
-  color:var(--green);
-  font-size:12px;
-}
-
-.tag.danger{
-  background:#fee2e2;
-  color:var(--danger);
-}
-
-.notice{
-  background:#fff7ed;
-  border:1px solid #fed7aa;
-  padding:12px;
-  border-radius:12px;
-  color:#9a3412;
-  margin:12px 0;
-}
-
-@media(max-width:850px){
-  aside{
-    width:70px;
-    padding:12px 7px;
-  }
-
-  aside button{
-    font-size:0;
-    text-align:center;
-  }
-
-  aside button:first-letter{
-    font-size:20px;
-  }
-
-  main{
-    padding:14px;
-  }
-
-  .grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-
-  form{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
 @media(max-width:500px){
-  header h1{
-    font-size:17px;
-  }
-
-  .grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  form{
-    grid-template-columns:1fr;
-  }
-
-  .metric{
-    font-size:23px;
-  }
+ form{grid-template-columns:1fr}
+ .grid{gap:8px}
+ .metric{font-size:23px}
+ header h2{font-size:16px}
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+<section id="loginScreen">
+  <div class="loginBox">
+    <h1>🩺 Shree Ram Medical</h1>
+    <p>Admin Login</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" required placeholder="Admin email">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" required placeholder="Password">
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div id="error"></div>
+  </div>
+</section>
+
+<!-- MAIN APP -->
+<div id="app">
+
 <header>
   <div>
-    <h1>🩺 Shree Ram Medical</h1>
-    <small>Pharmacy ERP — Phase 1</small>
+    <h2>🩺 Shree Ram Medical</h2>
+    <small id="userEmail"></small>
   </div>
-
-  <button class="secondary" onclick="logout()">Logout</button>
+  <button class="gray" onclick="logout()">Logout</button>
 </header>
 
 <div class="layout">
 
 <aside>
-  <button class="active" onclick="showPage('dashboard',this)">
-    📊 Dashboard
-  </button>
-
-  <button onclick="showPage('medicines',this)">
-    💊 Medicines
-  </button>
-
-  <button onclick="showPage('batches',this)">
-    📦 Batch Stock
-  </button>
-
-  <button onclick="showPage('settings',this)">
-    ⚙️ Settings
-  </button>
+  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showPage('medicines',this)">💊 Medicines</button>
+  <button onclick="showPage('batches',this)">📦 Batch Stock</button>
 </aside>
 
 <main>
 
 <!-- DASHBOARD -->
-
 <section id="dashboard" class="page active">
-
-  <div class="topline">
-    <h2>Dashboard</h2>
-
-    <button onclick="showPage('medicines')">
-      + Add Medicine
-    </button>
-  </div>
+  <h2>Dashboard</h2>
 
   <div class="grid">
-
     <div class="card">
-      <div class="muted">Total Medicines</div>
-      <div class="metric" id="mCount">0</div>
+      <div class="small">Total Medicines</div>
+      <div class="metric" id="medicineCount">0</div>
     </div>
 
     <div class="card">
-      <div class="muted">Total Stock Units</div>
-      <div class="metric" id="sCount">0</div>
+      <div class="small">Total Stock Units</div>
+      <div class="metric" id="stockCount">0</div>
     </div>
 
     <div class="card">
-      <div class="muted">Low Stock</div>
+      <div class="small">Low Stock</div>
       <div class="metric" id="lowCount">0</div>
     </div>
 
     <div class="card">
-      <div class="muted">Expiry Alerts</div>
-      <div class="metric" id="expCount">0</div>
+      <div class="small">Expiry Alert</div>
+      <div class="metric" id="expiryCount">0</div>
     </div>
-
   </div>
 
   <div class="card">
-    <h3>System Status</h3>
-
-    <p id="status">
-      Demo mode active. Data browser में save होगा।
-    </p>
+    <h3>Firebase Status</h3>
+    <p id="status">Cloud Database connected after login.</p>
   </div>
-
 </section>
 
 <!-- MEDICINES -->
-
 <section id="medicines" class="page">
-
-  <div class="topline">
-    <h2>Medicine Master</h2>
-  </div>
+  <h2>Medicine Master</h2>
 
   <div class="card">
-
     <form id="medicineForm">
 
       <div class="field">
         <label>Medicine Name *</label>
-        <input
-          id="name"
-          required
-          placeholder="e.g. Paracetamol 500mg"
-        >
+        <input id="medicineName" required placeholder="Paracetamol 500mg">
       </div>
 
       <div class="field">
         <label>Company</label>
-        <input
-          id="company"
-          placeholder="Company name"
-        >
+        <input id="company" placeholder="Company name">
       </div>
 
       <div class="field">
         <label>Composition / Salt</label>
-        <input
-          id="salt"
-          placeholder="Composition"
-        >
+        <input id="salt" placeholder="Composition">
       </div>
 
       <div class="field">
-        <label>HSN</label>
-        <input
-          id="hsn"
-          placeholder="HSN code"
-        >
+        <label>HSN Code</label>
+        <input id="hsn" placeholder="HSN">
       </div>
 
       <div class="field">
         <label>GST %</label>
-        <input
-          id="gst"
-          type="number"
-          min="0"
-          value="12"
-        >
+        <input id="gst" type="number" value="12" min="0">
       </div>
 
       <div class="field">
         <label>Reorder Level</label>
-        <input
-          id="reorder"
-          type="number"
-          min="0"
-          value="10"
-        >
+        <input id="reorder" type="number" value="10" min="0">
       </div>
 
-      <div class="form-actions">
-        <button type="submit">
-          Save Medicine
-        </button>
-
-        <button
-          type="button"
-          class="secondary"
-          onclick="document.getElementById('medicineForm').reset()"
-        >
-          Reset
-        </button>
+      <div class="actions">
+        <button type="submit">Save Medicine</button>
+        <button type="reset" class="gray">Reset</button>
       </div>
 
     </form>
-
   </div>
 
-  <br>
-
   <div class="card">
-
     <h3>Medicine List</h3>
 
     <div class="table-wrap">
-
       <table>
         <thead>
           <tr>
@@ -460,113 +200,62 @@ th{
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody id="medicineRows"></tbody>
       </table>
-
     </div>
-
   </div>
-
 </section>
 
-<!-- BATCHES -->
-
+<!-- BATCH STOCK -->
 <section id="batches" class="page">
-
-  <div class="topline">
-    <h2>Batch Stock</h2>
-  </div>
+  <h2>Batch Stock</h2>
 
   <div class="card">
-
     <form id="batchForm">
 
       <div class="field">
         <label>Medicine *</label>
-
-        <select id="medicineId" required>
-          <option value="">
-            Select Medicine
-          </option>
+        <select id="batchMedicine" required>
+          <option value="">Select medicine</option>
         </select>
       </div>
 
       <div class="field">
         <label>Batch Number *</label>
-
-        <input
-          id="batchNo"
-          required
-          placeholder="Batch number"
-        >
+        <input id="batchNumber" required>
       </div>
 
       <div class="field">
         <label>Expiry Date *</label>
-
-        <input
-          id="expiry"
-          type="date"
-          required
-        >
+        <input id="expiryDate" type="date" required>
       </div>
 
       <div class="field">
         <label>Quantity *</label>
-
-        <input
-          id="qty"
-          type="number"
-          min="0"
-          required
-        >
+        <input id="quantity" type="number" min="0" required>
       </div>
 
       <div class="field">
         <label>Purchase Rate</label>
-
-        <input
-          id="purchaseRate"
-          type="number"
-          min="0"
-          step="0.01"
-          value="0"
-        >
+        <input id="purchaseRate" type="number" min="0" step="0.01" value="0">
       </div>
 
       <div class="field">
         <label>MRP</label>
-
-        <input
-          id="mrp"
-          type="number"
-          min="0"
-          step="0.01"
-          value="0"
-        >
+        <input id="mrp" type="number" min="0" step="0.01" value="0">
       </div>
 
-      <div class="form-actions">
-
-        <button type="submit">
-          Save Batch
-        </button>
-
+      <div class="actions">
+        <button type="submit">Save Batch</button>
       </div>
 
     </form>
-
   </div>
 
-  <br>
-
   <div class="card">
-
     <h3>Batch List</h3>
 
     <div class="table-wrap">
-
       <table>
         <thead>
           <tr>
@@ -575,375 +264,336 @@ th{
             <th>Expiry</th>
             <th>Qty</th>
             <th>MRP</th>
-            <th>Alert</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody id="batchRows"></tbody>
       </table>
-
     </div>
-
   </div>
-
-</section>
-
-<!-- SETTINGS -->
-
-<section id="settings" class="page">
-
-  <h2>Settings</h2>
-
-  <div class="card">
-
-    <h3>Firebase Setup</h3>
-
-    <p class="muted">
-      यह Phase 1 browser demo mode में चलता है।
-      Firebase connection अगले चरण में जोड़ा जाएगा।
-    </p>
-
-    <div class="notice">
-      Real pharmacy use से पहले Firebase Authentication,
-      secure database rules, backup और audit logs लगाना जरूरी है।
-    </div>
-
-  </div>
-
 </section>
 
 </main>
 </div>
+</div>
 
 <script>
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_FIREBASE_WEB_API_KEY_HERE",
+  authDomain: "shree-ram-medical-2c3dd.firebaseapp.com",
+  databaseURL: "https://shree-ram-medical-2c3dd-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "shree-ram-medical-2c3dd",
+  storageBucket: "shree-ram-medical-2c3dd.firebasestorage.app",
+  messagingSenderId: "160764705146",
+  appId: "1:160764705146:web:a46bafa50e9674a6337ec3"
+};
 
-let medicines = JSON.parse(
-  localStorage.getItem("srm_medicines") || "[]"
-);
+firebase.initializeApp(firebaseConfig);
 
-let batches = JSON.parse(
-  localStorage.getItem("srm_batches") || "[]"
-);
+const auth = firebase.auth();
+const db = firebase.database();
+
+let medicines = {};
+let batches = {};
 
 function $(id){
   return document.getElementById(id);
 }
 
-function persist(){
-  localStorage.setItem(
-    "srm_medicines",
-    JSON.stringify(medicines)
-  );
+function showPage(pageId, button){
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
 
-  localStorage.setItem(
-    "srm_batches",
-    JSON.stringify(batches)
-  );
+  $(pageId).classList.add("active");
 
-  render();
-}
+  document.querySelectorAll("aside button").forEach(btn => {
+    btn.classList.remove("active");
+  });
 
-function showPage(id, btn){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(page => {
-      page.classList.remove("active");
-    });
-
-  $(id).classList.add("active");
-
-  document
-    .querySelectorAll("aside button")
-    .forEach(button => {
-      button.classList.remove("active");
-    });
-
-  if(btn){
-    btn.classList.add("active");
+  if(button){
+    button.classList.add("active");
   }
 
-  if(id === "batches"){
+  if(pageId === "batches"){
     loadMedicineOptions();
   }
 }
 
-function render(){
+auth.onAuthStateChanged(user => {
+  if(user){
+    $("loginScreen").style.display = "none";
+    $("app").style.display = "block";
+    $("userEmail").textContent = user.email;
 
-  $("mCount").textContent = medicines.length;
+    loadFirebaseData(user.uid);
+  }else{
+    $("loginScreen").style.display = "flex";
+    $("app").style.display = "none";
+  }
+});
 
-  $("sCount").textContent =
-    batches.reduce((total,batch) => {
-      return total + Number(batch.qty || 0);
-    },0);
+$("loginForm").addEventListener("submit",async event => {
+  event.preventDefault();
 
-  $("lowCount").textContent =
-    batches.filter(batch => {
+  $("error").textContent = "Login हो रहा है...";
 
-      const medicine = medicines.find(
-        medicine => medicine.id === batch.medicineId
-      );
+  try{
+    await auth.signInWithEmailAndPassword(
+      $("loginEmail").value.trim(),
+      $("loginPassword").value
+    );
 
-      return medicine &&
-        Number(batch.qty) <= Number(medicine.reorder);
+    $("error").textContent = "";
+  }catch(error){
+    $("error").textContent = error.message;
+  }
+});
 
-    }).length;
+function loadFirebaseData(uid){
 
-  $("expCount").textContent =
-    batches.filter(batch => {
-      return daysTo(batch.expiry) <= 90;
-    }).length;
+  db.ref("users/" + uid + "/medicines").on("value",snapshot => {
+    medicines = snapshot.val() || {};
+    renderMedicines();
+    loadMedicineOptions();
+    renderDashboard();
+  });
 
-  $("medicineRows").innerHTML =
-    medicines.map(medicine => {
+  db.ref("users/" + uid + "/batches").on("value",snapshot => {
+    batches = snapshot.val() || {};
+    renderBatches();
+    renderDashboard();
+  });
+}
 
-      return `
-        <tr>
-          <td>
-            <b>${esc(medicine.name)}</b>
-          </td>
+$("medicineForm").addEventListener("submit",async event => {
+  event.preventDefault();
 
-          <td>${esc(medicine.company)}</td>
+  const user = auth.currentUser;
+  if(!user) return;
 
-          <td>${esc(medicine.salt)}</td>
+  const medicineRef = db.ref(
+    "users/" + user.uid + "/medicines"
+  ).push();
 
-          <td>${medicine.gst}%</td>
+  const medicine = {
+    name: $("medicineName").value.trim(),
+    company: $("company").value.trim(),
+    salt: $("salt").value.trim(),
+    hsn: $("hsn").value.trim(),
+    gst: Number($("gst").value || 0),
+    reorder: Number($("reorder").value || 0),
+    createdAt: Date.now()
+  };
 
-          <td>
-            <button
-              class="danger"
-              onclick="removeMedicine('${medicine.id}')"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      `;
+  try{
+    await medicineRef.set(medicine);
+    event.target.reset();
+    alert("Medicine Firebase में save हो गई");
+  }catch(error){
+    alert(error.message);
+  }
+});
 
-    }).join("") ||
-    `
+$("batchForm").addEventListener("submit",async event => {
+  event.preventDefault();
+
+  const user = auth.currentUser;
+  if(!user) return;
+
+  if(!$("batchMedicine").value){
+    alert("पहले medicine select करें");
+    return;
+  }
+
+  const batchRef = db.ref(
+    "users/" + user.uid + "/batches"
+  ).push();
+
+  const batch = {
+    medicineId: $("batchMedicine").value,
+    batchNumber: $("batchNumber").value.trim(),
+    expiryDate: $("expiryDate").value,
+    quantity: Number($("quantity").value || 0),
+    purchaseRate: Number($("purchaseRate").value || 0),
+    mrp: Number($("mrp").value || 0),
+    createdAt: Date.now()
+  };
+
+  try{
+    await batchRef.set(batch);
+    event.target.reset();
+    alert("Batch Firebase में save हो गया");
+  }catch(error){
+    alert(error.message);
+  }
+});
+
+function renderMedicines(){
+
+  const rows = Object.entries(medicines).map(([id,medicine]) => {
+    return `
       <tr>
-        <td colspan="5">
-          No medicines added.
+        <td><b>${escapeHtml(medicine.name)}</b></td>
+        <td>${escapeHtml(medicine.company || "")}</td>
+        <td>${escapeHtml(medicine.salt || "")}</td>
+        <td>${medicine.gst || 0}%</td>
+        <td>
+          <button class="red" onclick="deleteMedicine('${id}')">
+            Delete
+          </button>
         </td>
       </tr>
     `;
+  }).join("");
 
-  $("batchRows").innerHTML =
-    batches.map(batch => {
-
-      const medicine = medicines.find(
-        medicine => medicine.id === batch.medicineId
-      ) || {};
-
-      const remainingDays = daysTo(batch.expiry);
-
-      let alertText = "OK";
-      let alertClass = "";
-
-      if(remainingDays < 0){
-        alertText = "Expired";
-        alertClass = "danger";
-      }
-      else if(remainingDays <= 90){
-        alertText = "Near expiry";
-        alertClass = "danger";
-      }
-
-      return `
-        <tr>
-
-          <td>${esc(medicine.name || "Unknown")}</td>
-
-          <td>${esc(batch.batchNo)}</td>
-
-          <td>${batch.expiry}</td>
-
-          <td>${batch.qty}</td>
-
-          <td>₹${batch.mrp}</td>
-
-          <td>
-            <span class="tag ${alertClass}">
-              ${alertText}
-            </span>
-          </td>
-
-          <td>
-            <button
-              class="danger"
-              onclick="removeBatch('${batch.id}')"
-            >
-              Delete
-            </button>
-          </td>
-
-        </tr>
-      `;
-
-    }).join("") ||
-    `
-      <tr>
-        <td colspan="7">
-          No batches added.
-        </td>
-      </tr>
-    `;
+  $("medicineRows").innerHTML = rows || `
+    <tr><td colspan="5">अभी कोई medicine नहीं है।</td></tr>
+  `;
 }
 
 function loadMedicineOptions(){
 
-  $("medicineId").innerHTML =
-    medicines.map(medicine => {
-
-      return `
-        <option value="${medicine.id}">
-          ${esc(medicine.name)}
-        </option>
-      `;
-
-    }).join("") ||
-    `
-      <option value="">
-        Add medicine first
+  const options = Object.entries(medicines).map(([id,medicine]) => {
+    return `
+      <option value="${id}">
+        ${escapeHtml(medicine.name)}
       </option>
     `;
+  }).join("");
+
+  $("batchMedicine").innerHTML = `
+    <option value="">Select medicine</option>
+    ${options}
+  `;
 }
 
-$("medicineForm").addEventListener("submit",function(event){
+function renderBatches(){
 
-  event.preventDefault();
+  const rows = Object.entries(batches).map(([id,batch]) => {
 
-  const medicine = {
+    const medicine = medicines[batch.medicineId] || {};
+    const days = getDaysRemaining(batch.expiryDate);
 
-    id: crypto.randomUUID(),
+    let status = "OK";
+    let className = "";
 
-    name: $("name").value.trim(),
+    if(days < 0){
+      status = "Expired";
+      className = "red";
+    }else if(days <= 90){
+      status = "Near Expiry";
+      className = "red";
+    }
 
-    company: $("company").value.trim(),
+    return `
+      <tr>
+        <td>${escapeHtml(medicine.name || "Unknown")}</td>
+        <td>${escapeHtml(batch.batchNumber)}</td>
+        <td>${batch.expiryDate}</td>
+        <td>${batch.quantity}</td>
+        <td>₹${batch.mrp}</td>
+        <td><span class="badge ${className}">${status}</span></td>
+        <td>
+          <button class="red" onclick="deleteBatch('${id}')">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
 
-    salt: $("salt").value.trim(),
+  $("batchRows").innerHTML = rows || `
+    <tr><td colspan="7">अभी कोई batch नहीं है।</td></tr>
+  `;
+}
 
-    hsn: $("hsn").value.trim(),
+function renderDashboard(){
 
-    gst: $("gst").value,
+  const medicineList = Object.values(medicines);
+  const batchList = Object.values(batches);
 
-    reorder: $("reorder").value
+  $("medicineCount").textContent = medicineList.length;
 
-  };
+  $("stockCount").textContent = batchList.reduce(
+    (total,batch) => total + Number(batch.quantity || 0),0
+  );
 
-  medicines.push(medicine);
+  $("lowCount").textContent = batchList.filter(batch => {
+    const medicine = medicines[batch.medicineId];
+    return medicine &&
+      Number(batch.quantity) <= Number(medicine.reorder || 0);
+  }).length;
 
-  this.reset();
+  $("expiryCount").textContent = batchList.filter(batch => {
+    return getDaysRemaining(batch.expiryDate) <= 90;
+  }).length;
+}
 
-  persist();
+async function deleteMedicine(id){
 
-  alert("Medicine saved successfully");
-
-});
-
-$("batchForm").addEventListener("submit",function(event){
-
-  event.preventDefault();
-
-  if(!$("medicineId").value){
-
-    alert("पहले medicine add करें");
-
+  if(!confirm("Medicine और उससे जुड़े batches delete करें?")){
     return;
   }
 
-  const batch = {
+  const user = auth.currentUser;
+  if(!user) return;
 
-    id: crypto.randomUUID(),
+  await db.ref("users/" + user.uid + "/medicines/" + id).remove();
 
-    medicineId: $("medicineId").value,
+  const relatedBatches = Object.entries(batches)
+    .filter(([batchId,batch]) => batch.medicineId === id);
 
-    batchNo: $("batchNo").value.trim(),
-
-    expiry: $("expiry").value,
-
-    qty: $("qty").value,
-
-    purchaseRate: $("purchaseRate").value,
-
-    mrp: $("mrp").value
-
-  };
-
-  batches.push(batch);
-
-  this.reset();
-
-  persist();
-
-  alert("Batch saved successfully");
-
-});
-
-function removeMedicine(id){
-
-  if(confirm("क्या आप यह medicine delete करना चाहते हैं?")){
-
-    medicines = medicines.filter(
-      medicine => medicine.id !== id
-    );
-
-    batches = batches.filter(
-      batch => batch.medicineId !== id
-    );
-
-    persist();
+  for(const [batchId] of relatedBatches){
+    await db.ref(
+      "users/" + user.uid + "/batches/" + batchId
+    ).remove();
   }
 }
 
-function removeBatch(id){
+async function deleteBatch(id){
 
-  if(confirm("क्या आप यह batch delete करना चाहते हैं?")){
-
-    batches = batches.filter(
-      batch => batch.id !== id
-    );
-
-    persist();
+  if(!confirm("यह batch delete करें?")){
+    return;
   }
+
+  const user = auth.currentUser;
+  if(!user) return;
+
+  await db.ref(
+    "users/" + user.uid + "/batches/" + id
+  ).remove();
 }
 
-function daysTo(date){
+function getDaysRemaining(date){
+
+  const today = new Date();
+  const expiry = new Date(date);
 
   return Math.ceil(
-    (new Date(date) - new Date()) / 86400000
+    (expiry - today) / 86400000
   );
 }
 
-function esc(value){
+function escapeHtml(value){
 
   return String(value ?? "").replace(
     /[&<>"']/g,
-    character => {
-
-      const characters = {
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#39;"
-      };
-
-      return characters[character];
-    }
+    character => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[character])
   );
 }
 
 function logout(){
-
-  alert("Demo mode में logout अभी connected नहीं है।");
+  auth.signOut();
 }
-
-render();
-
 </script>
 
 </body>
-      </html>
+</html>

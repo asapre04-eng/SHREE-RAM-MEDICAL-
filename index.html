@@ -444,6 +444,10 @@
           🧾 Purchase Entry
         </button>
 
+        <button class="nav-btn" data-page="salesPage">
+  🧾 Sales & Billing
+        </button>
+
         <button class="nav-btn" data-page="purchaseHistoryPage">
           📚 Purchase History
         </button>
@@ -600,6 +604,186 @@
             </div>
           </div>
  </section>
+        
+        <!-- ================= SALES & BILLING PAGE ================= -->
+
+<section id="salesPage" class="section-page">
+
+  <div class="page-title">Sales & Billing</div>
+
+  <!-- CUSTOMER DETAILS -->
+  <div class="section">
+
+    <h2>Customer Details</h2>
+
+    <div class="form-grid">
+
+      <div class="input-group">
+        <label>Invoice Number</label>
+        <input id="saleInvoiceNo" readonly>
+      </div>
+
+      <div class="input-group">
+        <label>Sale Date</label>
+        <input id="saleDate" type="date">
+      </div>
+
+      <div class="input-group">
+        <label>Customer Name</label>
+        <input id="customerName" placeholder="Customer name">
+      </div>
+
+      <div class="input-group">
+        <label>Customer Mobile</label>
+        <input
+          id="customerMobile"
+          type="tel"
+          placeholder="Mobile number"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Payment Mode</label>
+        <select id="salePaymentMode">
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Card">Card</option>
+          <option value="Credit">Credit</option>
+        </select>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MEDICINE SELECTION -->
+  <div class="section">
+
+    <h2>Add Medicine to Bill</h2>
+
+    <div class="form-grid">
+
+      <div class="input-group">
+        <label>Medicine</label>
+        <select id="saleMedicine">
+          <option value="">Select Medicine</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Batch</label>
+        <select id="saleBatch">
+          <option value="">Select Batch</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Available Stock</label>
+        <input id="saleAvailableStock" readonly>
+      </div>
+
+      <div class="input-group">
+        <label>MRP</label>
+        <input id="saleMRP" readonly>
+      </div>
+
+      <div class="input-group">
+        <label>Quantity</label>
+        <input
+          id="saleQty"
+          type="number"
+          min="1"
+          value="1"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Discount %</label>
+        <input
+          id="saleDiscount"
+          type="number"
+          min="0"
+          step="0.01"
+          value="0"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>GST %</label>
+        <input
+          id="saleGST"
+          type="number"
+          min="0"
+          step="0.01"
+          value="0"
+        >
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn success"
+        id="addSaleItemBtn"
+      >
+        + Add to Bill
+      </button>
+
+      <button
+        type="button"
+        class="btn gray"
+        id="resetSaleItemBtn"
+      >
+        Reset Item
+      </button>
+
+    </div>
+
+    <div id="saleItemMessage" class="message"></div>
+
+  </div>
+
+  <!-- BILL ITEMS -->
+  <div class="section">
+
+    <h2>Bill Items</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Sr.</th>
+            <th>Medicine</th>
+            <th>Batch</th>
+            <th>Qty</th>
+            <th>MRP</th>
+            <th>Gross</th>
+            <th>Discount</th>
+            <th>GST</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="saleItemsBody">
+
+          <tr>
+            <td colspan="10" class="empty">
+              अभी कोई medicine bill में नहीं है
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
          <!-- SUPPLIER PAGE -->
         <section id="supplierPage" class="section-page">
           <div class="page-title">Supplier Master</div>

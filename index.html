@@ -365,6 +365,432 @@
         font-size: 18px;
       }
     }
+    /* ================= PREMIUM DASHBOARD ================= */
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 15px rgba(15, 23, 42, .08);
+}
+
+.dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.dashboard-brand h1 {
+  color: #0f172a;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.dashboard-brand p {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.dashboard-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.notification-icon {
+  font-size: 26px;
+  color: #0f172a;
+}
+
+.dashboard-banner {
+  min-height: 170px;
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 18px;
+  color: white;
+  background:
+    linear-gradient(100deg, rgba(30, 64, 175, .98), rgba(14, 165, 233, .72)),
+    url("https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1200&q=80");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-banner h2 {
+  font-size: 29px;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.dashboard-banner p {
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.banner-btn {
+  display: inline-block;
+  border: none;
+  background: white;
+  color: #1d4ed8;
+  padding: 11px 18px;
+  border-radius: 22px;
+  font-weight: bold;
+}
+
+.date-filters {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 3px 0 15px;
+}
+
+.date-filter {
+  white-space: nowrap;
+  border: 1px solid #dbeafe;
+  background: white;
+  color: #334155;
+  padding: 11px 19px;
+  border-radius: 25px;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, .06);
+}
+
+.date-filter.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.dashboard-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dashboard-kpi {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, .08);
+}
+
+.kpi-icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+}
+
+.kpi-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.kpi-content strong {
+  display: block;
+  font-size: 23px;
+  color: #0f172a;
+  margin-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+.kpi-content span {
+  color: #334155;
+  font-size: 14px;
+}
+
+.kpi-arrow {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.kpi-blue {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-color: #93c5fd;
+}
+
+.kpi-blue .kpi-icon {
+  background: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.kpi-blue .kpi-arrow {
+  color: #1d4ed8;
+}
+
+.kpi-red {
+  background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+  border-color: #fda4af;
+}
+
+.kpi-red .kpi-icon {
+  background: #fecdd3;
+  color: #e11d48;
+}
+
+.kpi-red .kpi-arrow {
+  color: #e11d48;
+}
+
+.kpi-green {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-color: #86efac;
+}
+
+.kpi-green .kpi-icon {
+  background: #bbf7d0;
+  color: #15803d;
+}
+
+.kpi-green .kpi-arrow {
+  color: #15803d;
+}
+
+.kpi-purple {
+  background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+  border-color: #d8b4fe;
+}
+
+.kpi-purple .kpi-icon {
+  background: #e9d5ff;
+  color: #7e22ce;
+}
+
+.kpi-purple .kpi-arrow {
+  color: #7e22ce;
+}
+
+.kpi-orange {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-color: #fdba74;
+}
+
+.kpi-orange .kpi-icon {
+  background: #fed7aa;
+  color: #c2410c;
+}
+
+.kpi-orange .kpi-arrow {
+  color: #c2410c;
+}
+
+.kpi-cyan {
+  background: linear-gradient(135deg, #ecfeff, #cffafe);
+  border-color: #67e8f9;
+}
+
+.kpi-cyan .kpi-icon {
+  background: #a5f3fc;
+  color: #0e7490;
+}
+
+.kpi-cyan .kpi-arrow {
+  color: #0e7490;
+}
+
+.quick-section {
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, .08);
+  margin-bottom: 18px;
+}
+
+.quick-section h2 {
+  margin-bottom: 15px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.quick-action {
+  border: none;
+  padding: 15px 8px;
+  border-radius: 15px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-weight: bold;
+  text-align: center;
+}
+
+.quick-action span {
+  display: block;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.alert-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.stock-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px;
+  border-radius: 16px;
+  background: #fff1f2;
+  border: 1px solid #fda4af;
+}
+
+.stock-alert.warning {
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+.stock-alert strong {
+  display: block;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+.stock-alert span {
+  font-size: 13px;
+  color: #475569;
+}
+
+.alert-symbol {
+  font-size: 30px;
+}
+
+.dashboard-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 16px;
+  padding: 13px 16px;
+  margin-bottom: 20px;
+}
+
+.dashboard-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.dashboard-search button {
+  border: none;
+  background: transparent;
+  font-size: 26px;
+  color: #2563eb;
+}
+
+.dashboard-footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 12px;
+  padding: 20px 5px;
+}
+
+@media (max-width: 700px) {
+  .dashboard-header {
+    padding: 13px;
+  }
+
+  .dashboard-brand h1 {
+    font-size: 20px;
+  }
+
+  .dashboard-logo {
+    width: 48px;
+    height: 48px;
+    font-size: 23px;
+  }
+
+  .dashboard-banner {
+    padding: 20px;
+    min-height: 165px;
+  }
+
+  .dashboard-banner h2 {
+    font-size: 25px;
+  }
+
+  .dashboard-kpis {
+    gap: 10px;
+  }
+
+  .dashboard-kpi {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .kpi-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 21px;
+  }
+
+  .kpi-content strong {
+    font-size: 18px;
+  }
+
+  .kpi-content span {
+    font-size: 12px;
+  }
+
+  .kpi-arrow {
+    font-size: 22px;
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .alert-row {
+    grid-template-columns: 1fr;
+  }
+  }
   </style>
 </head>
 
@@ -457,32 +883,313 @@
       <main class="content">
 
         <!-- DASHBOARD -->
-        <section id="dashboardPage" class="section-page active">
-          <div class="page-title">Dashboard</div>
+        <!-- ================= PREMIUM DASHBOARD PAGE ================= -->
 
-          <div class="cards">
-            <div class="stat-card">
-              <h4>Total Medicines</h4>
-              <strong id="totalMedicines">0</strong>
-            </div>
+<section id="dashboardPage" class="section-page active">
 
-            <div class="stat-card">
-              <h4>Total Batches</h4>
-              <strong id="totalBatches">0</strong>
-            </div>
+  <!-- HEADER -->
+  <div class="dashboard-header">
 
-            <div class="stat-card">
-              <h4>Total Suppliers</h4>
-              <strong id="totalSuppliers">0</strong>
-            </div>
+    <div class="dashboard-brand">
+      <div class="dashboard-logo">✚</div>
 
-            <div class="stat-card">
-              <h4>Total Purchase</h4>
-              <strong id="totalPurchase">₹0</strong>
-            </div>
-          </div>
+      <div>
+        <h1>Shree Ram Medical</h1>
+        <p>Your Health, Our Priority</p>
+      </div>
+    </div>
 
-          <div class="section">
+    <div class="dashboard-profile">
+      <span class="notification-icon">🔔</span>
+
+      <div class="profile-circle" id="adminInitial">
+        A
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROMOTIONAL BANNER -->
+  <div class="dashboard-banner">
+
+    <div>
+      <h2>
+        Better Health<br>
+        <span>Happier Tomorrow</span>
+      </h2>
+
+      <p>
+        Quality Medicines | Genuine Products | Trusted Care
+      </p>
+
+      <button
+        class="banner-btn"
+        onclick="openDashboardPage('medicinePage')"
+      >
+        Manage Your Store →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- DATE FILTERS -->
+  <div class="date-filters">
+
+    <button class="date-filter active">
+      Today
+    </button>
+
+    <button class="date-filter">
+      Yesterday
+    </button>
+
+    <button class="date-filter">
+      Last 7 Days
+    </button>
+
+    <button class="date-filter">
+      Last 30 Days
+    </button>
+
+    <button class="date-filter">
+      This Month
+    </button>
+
+    <button class="date-filter">
+      📅 Custom
+    </button>
+
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="dashboard-kpis">
+
+    <div class="dashboard-kpi kpi-blue">
+      <div class="kpi-icon">📦</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardStockValue">₹0.00</strong>
+        <span>Total Stock Value</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-red">
+      <div class="kpi-icon">⚠️</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardExpiredValue">₹0.00</strong>
+        <span>Expired Stock Value</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-green">
+      <div class="kpi-icon">🛒</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardPendingOrders">₹0.00</strong>
+        <span>Pending Customer Orders</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-purple">
+      <div class="kpi-icon">💳</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardCashBalance">₹0.00</strong>
+        <span>Cash + Bank Balance</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-orange">
+      <div class="kpi-icon">📊</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardSalesAmount">₹0.00</strong>
+        <span>Net Sales Amt</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-cyan">
+      <div class="kpi-icon">↔️</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardPurchaseAmount">₹0.00</strong>
+        <span>Net Purchase Amt</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-red">
+      <div class="kpi-icon">📈</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardProfitAmount">₹0.00</strong>
+        <span>Net Profit Amt</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-purple">
+      <div class="kpi-icon">🧾</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardExpenseAmount">₹0.00</strong>
+        <span>Total Expenses</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-green">
+      <div class="kpi-icon">👤</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardReceiveAmount">₹0.00</strong>
+        <span>Overall You’ll Receive</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+    <div class="dashboard-kpi kpi-red">
+      <div class="kpi-icon">💸</div>
+
+      <div class="kpi-content">
+        <strong id="dashboardPayAmount">₹0.00</strong>
+        <span>Overall You’ll Pay</span>
+      </div>
+
+      <div class="kpi-arrow">›</div>
+    </div>
+
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-section">
+
+    <h2>Quick Actions</h2>
+
+    <div class="quick-actions">
+
+      <button
+        class="quick-action"
+        onclick="openDashboardPage('salesPage')"
+      >
+        <span>🛒</span>
+        New Sale
+      </button>
+
+      <button
+        class="quick-action"
+        onclick="openDashboardPage('purchasePage')"
+      >
+        <span>📦</span>
+        New Purchase
+      </button>
+
+      <button
+        class="quick-action"
+        onclick="openDashboardPage('medicinePage')"
+      >
+        <span>💊</span>
+        Add Medicine
+      </button>
+
+      <button
+        class="quick-action"
+        onclick="openDashboardPage('supplierPage')"
+      >
+        <span>👥</span>
+        Add Supplier
+      </button>
+
+      <button
+        class="quick-action"
+        onclick="openDashboardPage('batchPage')"
+      >
+        <span>📊</span>
+        Stock Report
+      </button>
+
+      <button
+        class="quick-action"
+        onclick="alert('Expense module अगले चरण में जोड़ा जाएगा')"
+      >
+        <span>🧾</span>
+        Expense
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- STOCK ALERTS -->
+  <div class="alert-row">
+
+    <div class="stock-alert">
+      <div class="alert-symbol">⚠️</div>
+
+      <div>
+        <strong id="dashboardExpiredCount">
+          0 Medicines Expired
+        </strong>
+
+        <span>Check and update stock</span>
+      </div>
+    </div>
+
+    <div class="stock-alert warning">
+      <div class="alert-symbol">⌛</div>
+
+      <div>
+        <strong id="dashboardExpiringCount">
+          0 Medicines Expiring Soon
+        </strong>
+
+        <span>Within 30 days</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+  <div class="dashboard-search">
+
+    <span style="font-size:25px;">🔍</span>
+
+    <input
+      id="dashboardSearch"
+      placeholder="Search Medicines, Customers, Suppliers..."
+    >
+
+    <button
+      type="button"
+      onclick="alert('QR Scanner अगले चरण में जोड़ा जाएगा')"
+    >
+      ▣
+    </button>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="dashboard-footer">
+    © 2025 Shree Ram Medical. All Rights Reserved.<br>
+    Built with ❤️ for a Healthier India.
+  </div>
+
+</section>
             <h2>Welcome to Shree Ram Medical</h2>
             <p>
               यहाँ से आप Medicine, Batch Stock, Supplier और Purchase

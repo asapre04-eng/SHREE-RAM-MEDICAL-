@@ -279,24 +279,28 @@ th{background:#eff6ff}
 </div>
 
 <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDbQ0psb_gGGiOUNwh1L91FZtnpheGwlAo",
+    authDomain: "shree-ram-medical-2c3dd.firebaseapp.com",
+    databaseURL: "https://shree-ram-medical-2c3dd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "shree-ram-medical-2c3dd",
+    storageBucket: "shree-ram-medical-2c3dd.firebasestorage.app",
+    messagingSenderId: "160764705146",
+    appId: "1:160764705146:web:a46bafa50e9674a6337ec3"
+  };
 
+  // Firebase initialize — compat version
+  firebase.initializeApp(firebaseConfig);
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);",
-  authDomain: "shree-ram-medical-2c3dd.firebaseapp.com",
-  databaseURL: "https://shree-ram-medical-2c3dd-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "shree-ram-medical-2c3dd",
-  storageBucket: "shree-ram-medical-2c3dd.firebasestorage.app",
-  messagingSenderId: "160764705146",
-  appId: "1:160764705146:web:a46bafa50e9674a6337ec3"
-};
+  const auth = firebase.auth();
+  const db = firebase.database();
 
-firebase.initializeApp(firebaseConfig);
+  let medicines = {};
+  let batches = {};
 
-const auth = firebase.auth();
-const db = firebase.database();
-
+  console.log("Firebase connected successfully");
+</script>
+ 
 let medicines = {};
 let batches = {};
 

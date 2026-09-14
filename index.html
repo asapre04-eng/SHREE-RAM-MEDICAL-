@@ -1,778 +1,1532 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shree Ram Medical - Pharmacy ERP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <title>Shree Ram Medical - Pharmacy ERP</title>
 
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
-button,input,select{font:inherit}
-button{border:0;border-radius:8px;padding:10px 14px;background:#155eef;color:white;font-weight:bold;cursor:pointer}
-button.red{background:#dc2626}
-button.gray{background:#e2e8f0;color:#172033}
-button.green{background:#15803d}
-header{background:linear-gradient(135deg,#123b91,#155eef);color:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-header h2{margin:0;font-size:21px}
-.layout{display:flex;min-height:calc(100vh - 70px)}
-aside{width:235px;background:#0f172a;padding:12px}
-aside button{display:block;width:100%;text-align:left;background:transparent;color:#cbd5e1;margin:4px 0}
-aside button.active,aside button:hover{background:#1d4ed8;color:white}
-main{flex:1;min-width:0;padding:20px}
-.page{display:none}.page.active{display:block}
-.card{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.metric{font-size:27px;font-weight:bold;margin-top:8px}
-.small{font-size:13px;color:#64748b}
-form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:13px;font-weight:bold}
-input,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:white}
-.actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse;background:white}
-th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:13px;white-space:nowrap}
-th{background:#eff6ff}
-.badge{padding:4px 8px;border-radius:18px;background:#dcfce7;color:#15803d;font-size:12px}
-.badge.red{background:#fee2e2;color:#dc2626}
-.total-box{background:#eff6ff;border-radius:10px;padding:14px;font-weight:bold}
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0f2c70,#155eef)}
-.loginBox{background:white;width:100%;max-width:390px;padding:25px;border-radius:18px}
-.loginBox h1{color:#123b91;margin-top:0}
-#error{color:#dc2626;font-size:13px;margin-top:10px}
-#app{display:none}
-@media(max-width:850px){
- aside{width:70px;padding:8px 5px}
- aside button{font-size:0;text-align:center}
- aside button:first-letter{font-size:20px}
- main{padding:12px}
- .grid{grid-template-columns:repeat(2,1fr)}
- form{grid-template-columns:1fr 1fr}
-}
-@media(max-width:520px){
- form{grid-template-columns:1fr}
- .grid{gap:8px}
- .metric{font-size:22px}
- header h2{font-size:16px}
-}
-</style>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f1f5f9;
+      color: #172033;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.25);
+    }
+
+    .logo-title {
+      text-align: center;
+      color: #1d4ed8;
+      font-size: 27px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      padding: 11px;
+      outline: none;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus,
+    .input-group textarea:focus {
+      border-color: #2563eb;
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #dc2626;
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: #0f172a;
+      color: white;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 11px;
+      color: #cbd5e1;
+      margin-top: 3px;
+    }
+
+    .logout-btn {
+      border: none;
+      background: #dc2626;
+      color: white;
+      padding: 9px 15px;
+      border-radius: 8px;
+    }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 75px);
+    }
+
+    .sidebar {
+      width: 230px;
+      background: #1e293b;
+      padding: 18px 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      color: #e2e8f0;
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      margin-bottom: 7px;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      min-width: 0;
+    }
+
+    .page-title {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(15,23,42,.08);
+    }
+
+    .stat-card h4 {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card strong {
+      font-size: 27px;
+      color: #1d4ed8;
+    }
+
+    .section {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(15,23,42,.08);
+      margin-bottom: 20px;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .form-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      color: white;
+      background: #2563eb;
+    }
+
+    .btn.success {
+      background: #16a34a;
+    }
+
+    .btn.warning {
+      background: #d97706;
+    }
+
+    .btn.danger {
+      background: #dc2626;
+    }
+
+    .btn.gray {
+      background: #64748b;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th,
+    td {
+      padding: 11px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #eff6ff;
+      color: #1e40af;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 25px;
+      color: #64748b;
+    }
+
+    .section-page {
+      display: none;
+    }
+
+    .section-page.active {
+      display: block;
+    }
+
+    @media (max-width: 1000px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        display: flex;
+        gap: 7px;
+        overflow-x: auto;
+        padding: 10px;
+      }
+
+      .nav-btn {
+        min-width: 145px;
+        margin-bottom: 0;
+        text-align: center;
+      }
+
+      .content {
+        padding: 12px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-card strong {
+        font-size: 22px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        padding: 12px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<section id="loginScreen">
-  <div class="loginBox">
-    <h1>🩺 Shree Ram Medical</h1>
-    <p>Admin Login</p>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <div class="logo-title">श्री राम मेडिकल</div>
+      <div class="subtitle">Pharmacy Management System</div>
 
-    <form id="loginForm">
-      <div class="field">
-        <label>Email</label>
-        <input id="loginEmail" type="email" required>
-      </div>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="loginEmail">Email Address</label>
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="Enter email"
+            required
+          >
+        </div>
 
-      <div class="field">
-        <label>Password</label>
-        <input id="loginPassword" type="password" required>
-      </div>
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Enter password"
+            required
+          >
+        </div>
 
-      <div class="actions">
-        <button type="submit">Login</button>
-      </div>
-    </form>
+        <button class="primary-btn" type="submit">
+          Login
+        </button>
 
-    <div id="error"></div>
-  </div>
-</section>
-
-<div id="app">
-
-<header>
-  <div>
-    <h2>🩺 Shree Ram Medical</h2>
-    <small id="userEmail"></small>
-  </div>
-  <button class="gray" onclick="logout()">Logout</button>
-</header>
-
-<div class="layout">
-
-<aside>
-  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
-  <button onclick="showPage('medicines',this)">💊 Medicines</button>
-  <button onclick="showPage('batches',this)">📦 Stock</button>
-  <button onclick="showPage('suppliers',this)">🏢 Suppliers</button>
-  <button onclick="showPage('purchase',this)">🧾 Purchase</button>
-  <button onclick="showPage('purchaseHistory',this)">📚 Purchase History</button>
-</aside>
-
-<main>
-
-<section id="dashboard" class="page active">
-  <h2>Dashboard</h2>
-
-  <div class="grid">
-    <div class="card">
-      <div class="small">Total Medicines</div>
-      <div class="metric" id="medicineCount">0</div>
-    </div>
-
-    <div class="card">
-      <div class="small">Stock Units</div>
-      <div class="metric" id="stockCount">0</div>
-    </div>
-
-    <div class="card">
-      <div class="small">Low Stock</div>
-      <div class="metric" id="lowCount">0</div>
-    </div>
-
-    <div class="card">
-      <div class="small">Expiry Alert</div>
-      <div class="metric" id="expiryCount">0</div>
+        <div id="loginMessage" class="message"></div>
+      </form>
     </div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <div class="small">Total Purchase</div>
-      <div class="metric" id="purchaseTotal">₹0</div>
+  <!-- MAIN APP -->
+  <div id="app" class="app hidden">
+
+    <header class="topbar">
+      <div class="brand">
+        श्री राम मेडिकल
+        <small>Pharmacy ERP & Inventory Management</small>
+      </div>
+
+      <button id="logoutBtn" class="logout-btn">
+        Logout
+      </button>
+    </header>
+
+    <div class="layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <button class="nav-btn active" data-page="dashboardPage">
+          📊 Dashboard
+        </button>
+
+        <button class="nav-btn" data-page="medicinePage">
+          💊 Medicine Master
+        </button>
+
+        <button class="nav-btn" data-page="batchPage">
+          📦 Batch Stock
+        </button>
+
+        <button class="nav-btn" data-page="supplierPage">
+          🚚 Supplier Master
+        </button>
+
+        <button class="nav-btn" data-page="purchasePage">
+          🧾 Purchase Entry
+        </button>
+
+        <button class="nav-btn" data-page="purchaseHistoryPage">
+          📚 Purchase History
+        </button>
+      </aside>
+
+      <!-- CONTENT -->
+      <main class="content">
+
+        <!-- DASHBOARD -->
+        <section id="dashboardPage" class="section-page active">
+          <div class="page-title">Dashboard</div>
+
+          <div class="cards">
+            <div class="stat-card">
+              <h4>Total Medicines</h4>
+              <strong id="totalMedicines">0</strong>
+            </div>
+
+            <div class="stat-card">
+              <h4>Total Batches</h4>
+              <strong id="totalBatches">0</strong>
+            </div>
+
+            <div class="stat-card">
+              <h4>Total Suppliers</h4>
+              <strong id="totalSuppliers">0</strong>
+            </div>
+
+            <div class="stat-card">
+              <h4>Total Purchase</h4>
+              <strong id="totalPurchase">₹0</strong>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>Welcome to Shree Ram Medical</h2>
+            <p>
+              यहाँ से आप Medicine, Batch Stock, Supplier और Purchase
+              का पूरा रिकॉर्ड मैनेज कर सकते हैं।
+            </p>
+          </div>
+        </section>
+
+        <!-- MEDICINE PAGE -->
+        <section id="medicinePage" class="section-page">
+          <div class="page-title">Medicine Master</div>
+
+          <div class="section">
+            <h2>Add Medicine</h2>
+
+            <form id="medicineForm">
+              <div class="form-grid">
+                <div class="input-group">
+                  <label>Medicine Name</label>
+                  <input id="medicineName" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Company</label>
+                  <input id="medicineCompany">
+                </div>
+
+                <div class="input-group">
+                  <label>Category</label>
+                  <input id="medicineCategory">
+                </div>
+
+                <div class="input-group">
+                  <label>Generic Name</label>
+                  <input id="medicineGeneric">
+                </div>
+
+                <div class="input-group">
+                  <label>Pack Size</label>
+                  <input id="medicinePack">
+                </div>
+
+                <div class="input-group">
+                  <label>Barcode</label>
+                  <input id="medicineBarcode">
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn success" type="submit">
+                  Save Medicine
+                </button>
+
+                <button class="btn gray" type="reset">
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="section">
+            <h2>Medicine List</h2>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sr.</th>
+                    <th>Medicine Name</th>
+                    <th>Company</th>
+                    <th>Category</th>
+                    <th>Pack</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="medicineTableBody">
+                  <tr>
+                    <td colspan="6" class="empty">
+                      No medicines found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- BATCH PAGE -->
+        <section id="batchPage" class="section-page">
+          <div class="page-title">Batch Stock</div>
+
+          <div class="section">
+            <h2>Available Stock</h2>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sr.</th>
+                    <th>Medicine</th>
+                    <th>Batch No.</th>
+                    <th>Expiry</th>
+                    <th>Quantity</th>
+                    <th>Free Qty</th>
+                    <th>Purchase Rate</th>
+                    <th>MRP</th>
+                  </tr>
+                </thead>
+
+                <tbody id="batchTableBody">
+                  <tr>
+                    <td colspan="8" class="empty">
+                      No stock found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+ </section>
+         <!-- SUPPLIER PAGE -->
+        <section id="supplierPage" class="section-page">
+          <div class="page-title">Supplier Master</div>
+
+          <div class="section">
+            <h2>Add Supplier</h2>
+
+            <form id="supplierForm">
+              <div class="form-grid">
+                <div class="input-group">
+                  <label>Supplier Name</label>
+                  <input id="supplierName" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Mobile Number</label>
+                  <input id="supplierMobile" type="tel">
+                </div>
+
+                <div class="input-group">
+                  <label>GST Number</label>
+                  <input id="supplierGST">
+                </div>
+
+                <div class="input-group">
+                  <label>Address</label>
+                  <textarea id="supplierAddress" rows="2"></textarea>
+                </div>
+
+                <div class="input-group">
+                  <label>Opening Balance</label>
+                  <input id="supplierOpeningBalance" type="number" value="0">
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn success" type="submit">
+                  Save Supplier
+                </button>
+
+                <button class="btn gray" type="reset">
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="section">
+            <h2>Supplier List</h2>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sr.</th>
+                    <th>Supplier Name</th>
+                    <th>Mobile</th>
+                    <th>GST No.</th>
+                    <th>Opening Balance</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="supplierTableBody">
+                  <tr>
+                    <td colspan="6" class="empty">
+                      No suppliers found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- PURCHASE ENTRY PAGE -->
+        <section id="purchasePage" class="section-page">
+          <div class="page-title">Purchase Entry</div>
+
+          <div class="section">
+            <h2>New Purchase</h2>
+
+            <form id="purchaseForm">
+
+              <div class="form-grid">
+
+                <div class="input-group">
+                  <label>Bill Number</label>
+                  <input id="purchaseBillNo" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Purchase Date</label>
+                  <input id="purchaseDate" type="date" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Supplier</label>
+                  <select id="purchaseSupplier" required>
+                    <option value="">Select Supplier</option>
+                  </select>
+                </div>
+
+                <div class="input-group">
+                  <label>Medicine</label>
+                  <select id="purchaseMedicine" required>
+                    <option value="">Select Medicine</option>
+                  </select>
+                </div>
+
+                <div class="input-group">
+                  <label>Batch Number</label>
+                  <input id="purchaseBatchNo" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Expiry Date</label>
+                  <input id="purchaseExpiry" type="month" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Quantity</label>
+                  <input id="purchaseQty" type="number" min="0" value="0" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Free Quantity</label>
+                  <input id="purchaseFreeQty" type="number" min="0" value="0">
+                </div>
+
+                <div class="input-group">
+                  <label>Purchase Rate</label>
+                  <input id="purchaseRate" type="number" min="0" step="0.01" value="0" required>
+                </div>
+
+                <div class="input-group">
+                  <label>MRP</label>
+                  <input id="purchaseMRP" type="number" min="0" step="0.01" value="0" required>
+                </div>
+
+                <div class="input-group">
+                  <label>Discount %</label>
+                  <input id="purchaseDiscount" type="number" min="0" step="0.01" value="0">
+                </div>
+
+                <div class="input-group">
+                  <label>GST %</label>
+                  <input id="purchaseGST" type="number" min="0" step="0.01" value="0">
+                </div>
+
+                <div class="input-group">
+                  <label>Payment Mode</label>
+                  <select id="purchasePaymentMode">
+                    <option value="Cash">Cash</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Card">Card</option>
+                    <option value="Credit">Credit</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                  </select>
+                </div>
+
+                <div class="input-group">
+                  <label>Remarks</label>
+                  <textarea id="purchaseRemarks" rows="2"></textarea>
+                </div>
+
+              </div>
+
+              <div class="section" style="margin-top:20px;background:#f8fafc;">
+                <h2>Purchase Calculation</h2>
+
+                <div class="form-grid">
+
+                  <div class="input-group">
+                    <label>Gross Amount</label>
+                    <input id="purchaseGross" readonly>
+                  </div>
+
+                  <div class="input-group">
+                    <label>Discount Amount</label>
+                    <input id="purchaseDiscountAmount" readonly>
+                  </div>
+
+                  <div class="input-group">
+                    <label>GST Amount</label>
+                    <input id="purchaseGSTAmount" readonly>
+                  </div>
+
+                  <div class="input-group">
+                    <label>Grand Total</label>
+                    <input id="purchaseGrandTotal" readonly>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn success" type="submit">
+                  Save Purchase & Update Stock
+                </button>
+
+                <button class="btn gray" type="reset">
+                  Reset
+                </button>
+              </div>
+
+              <div id="purchaseMessage" class="message"></div>
+            </form>
+          </div>
+        </section>
+
+        <!-- PURCHASE HISTORY PAGE -->
+        <section id="purchaseHistoryPage" class="section-page">
+          <div class="page-title">Purchase History</div>
+
+          <div class="section">
+            <h2>All Purchase Records</h2>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sr.</th>
+                    <th>Bill No.</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Medicine</th>
+                    <th>Batch</th>
+                    <th>Quantity</th>
+                    <th>Grand Total</th>
+                    <th>Payment Mode</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="purchaseTableBody">
+                  <tr>
+                    <td colspan="10" class="empty">
+                      No purchase records found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </div>
-
-    <div class="card">
-      <div class="small">Total Suppliers</div>
-      <div class="metric" id="supplierCount">0</div>
-    </div>
   </div>
+  <script>
+  /* ================= FIREBASE CONFIG ================= */
 
-  <div class="card">
-    <h3>System Status</h3>
-    <p id="status">Login के बाद Firebase status दिखेगा।</p>
-  </div>
-</section>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDbQ0psb_gGGiOUNwh1L91FZtnpheGwlAo",
+    authDomain: "shree-ram-medical-2c3dd.firebaseapp.com",
+    databaseURL:
+      "https://shree-ram-medical-2c3dd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "shree-ram-medical-2c3dd",
+    storageBucket: "shree-ram-medical-2c3dd.firebasestorage.app",
+    messagingSenderId: "160764705146",
+    appId: "1:160764705146:web:a46bafa50e9674a6337ec3"
+  };
 
-<section id="medicines" class="page">
-  <h2>Medicine Master</h2>
+  firebase.initializeApp(firebaseConfig);
 
-  <div class="card">
-    <form id="medicineForm">
-      <div class="field">
-        <label>Medicine Name *</label>
-        <input id="medicineName" required placeholder="Paracetamol 500mg">
-      </div>
+  const auth = firebase.auth();
+  const db = firebase.database();
 
-      <div class="field">
-        <label>Company</label>
-        <input id="company">
-      </div>
+  let currentUser = null;
 
-      <div class="field">
-        <label>Composition / Salt</label>
-        <input id="salt">
-      </div>
+  let medicines = {};
+  let batches = {};
+  let suppliers = {};
+  let purchases = {};
 
-      <div class="field">
-        <label>HSN Code</label>
-        <input id="hsn">
-      </div>
+  /* ================= COMMON FUNCTIONS ================= */
 
-      <div class="field">
-        <label>GST %</label>
-        <input id="gst" type="number" min="0" value="12">
-      </div>
+  const $ = id => document.getElementById(id);
 
-      <div class="field">
-        <label>Reorder Level</label>
-        <input id="reorder" type="number" min="0" value="10">
-      </div>
+  function money(value) {
+    return "₹" + Number(value || 0).toFixed(2);
+  }
 
-      <div class="actions">
-        <button type="submit">Save Medicine</button>
-        <button type="reset" class="gray">Reset</button>
-      </div>
-    </form>
-  </div>
+  function today() {
+    return new Date().toISOString().split("T")[0];
+  }
 
-  <div class="card">
-    <h3>Medicine List</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Salt</th>
-            <th>GST</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="medicineRows"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
+  function escapeHTML(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-<section id="batches" class="page">
-  <h2>Batch Stock</h2>
+  function showMessage(id, message, success = false) {
+    const element = $(id);
 
-  <div class="card">
-    <form id="batchForm">
-      <div class="field">
-        <label>Medicine *</label>
-        <select id="batchMedicine" required></select>
-      </div>
+    if (!element) return;
 
-      <div class="field">
-        <label>Batch Number *</label>
-        <input id="batchNumber" required>
-      </div>
+    element.textContent = message;
+    element.style.color = success ? "#16a34a" : "#dc2626";
+  }
 
-      <div class="field">
-        <label>Expiry Date *</label>
-        <input id="expiryDate" type="date" required>
-      </div>
+  function clearMessage(id) {
+    const element = $(id);
 
-      <div class="field">
-        <label>Quantity *</label>
-        <input id="quantity" type="number" min="0" required>
-      </div>
+    if (element) {
+      element.textContent = "";
+    }
+  }
 
-      <div class="field">
-        <label>Purchase Rate</label>
-        <input id="purchaseRate" type="number" min="0" step="0.01" value="0">
-      </div>
+  /* ================= AUTHENTICATION ================= */
 
-      <div class="field">
-        <label>MRP</label>
-        <input id="mrp" type="number" min="0" step="0.01" value="0">
-      </div>
+  $("loginForm").addEventListener("submit", async event => {
+    event.preventDefault();
 
-      <div class="actions">
-        <button type="submit">Save Batch</button>
-        <button type="reset" class="gray">Reset</button>
-      </div>
-    </form>
-  </div>
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
 
-  <div class="card">
-    <h3>Batch List</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Medicine</th>
-            <th>Batch</th>
-            <th>Expiry</th>
-            <th>Qty</th>
-            <th>Purchase Rate</th>
-            <th>MRP</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="batchRows"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
+    clearMessage("loginMessage");
 
-<section id="suppliers" class="page">
-  <h2>Supplier Master</h2>
-
-  <div class="card">
-    <form id="supplierForm">
-      <div class="field">
-        <label>Supplier Name *</label>
-        <input id="supplierName" required>
-      </div>
-
-      <div class="field">
-        <label>Mobile</label>
-        <input id="supplierMobile" type="tel">
-      </div>
-
-      <div class="field">
-        <label>GSTIN</label>
-        <input id="supplierGstin">
-      </div>
-
-      <div class="field">
-        <label>Address</label>
-        <input id="supplierAddress">
-      </div>
-
-      <div class="actions">
-        <button type="submit">Save Supplier</button>
-        <button type="reset" class="gray">Reset</button>
-      </div>
-    </form>
-  </div>
-
-  <div class="card">
-    <h3>Supplier List</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>GSTIN</th>
-            <th>Address</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="supplierRows"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section id="purchase" class="page">
-  <h2>Purchase Entry</h2>
-
-  <div class="card">
-    <form id="purchaseForm">
-
-      <div class="field">
-        <label>Bill Number *</label>
-        <input id="purchaseBillNo" required>
-      </div>
-
-      <div class="field">
-        <label>Bill Date *</label>
-        <input id="purchaseDate" type="date" required>
-      </div>
-
-      <div class="field">
-        <label>Supplier *</label>
-        <select id="purchaseSupplier" required></select>
-      </div>
-
-      <div class="field">
-        <label>Medicine *</label>
-        <select id="purchaseMedicine" required></select>
-      </div>
-
-      <div class="field">
-        <label>Batch Number *</label>
-        <input id="purchaseBatch" required>
-      </div>
-
-      <div class="field">
-        <label>Expiry Date *</label>
-        <input id="purchaseExpiry" type="date" required>
-      </div>
-
-      <div class="field">
-        <label>Quantity *</label>
-        <input id="purchaseQty" type="number" min="1" required>
-      </div>
-
-      <div class="field">
-        <label>Free Quantity</label>
-        <input id="freeQty" type="number" min="0" value="0">
-      </div>
-
-      <div class="field">
-        <label>Purchase Rate *</label>
-        <input id="purchaseItemRate" type="number" min="0" step="0.01" required>
-      </div>
-
-      <div class="field">
-        <label>MRP *</label>
-        <input id="purchaseMrp" type="number" min="0" step="0.01" required>
-      </div>
-
-      <div class="field">
-        <label>Discount %</label>
-        <input id="purchaseDiscount" type="number" min="0" value="0">
-      </div>
-
-      <div class="field">
-        <label>GST %</label>
-        <input id="purchaseGst" type="number" min="0" value="12">
-      </div>
-
-      <div class="field">
-        <label>Payment Mode</label>
-        <select id="paymentMode">
-          <option value="Cash">Cash</option>
-          <option value="Credit">Credit</option>
-          <option value="UPI">UPI</option>
-          <option value="Bank">Bank</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Remarks</label>
-        <input id="purchaseRemarks">
-      </div>
-
-      <div class="actions">
-        <button type="button" onclick="calculatePurchase()">Calculate</button>
-      </div>
-    </form>
-
-    <br>
-
-    <div class="total-box">
-      <div>Gross Amount: ₹<span id="grossAmount">0.00</span></div>
-      <div>Discount Amount: ₹<span id="discountAmount">0.00</span></div>
-      <div>GST Amount: ₹<span id="gstAmount">0.00</span></div>
-      <hr>
-      <div>Grand Total: ₹<span id="grandTotal">0.00</span></div>
-    </div>
-
-    <br>
-
-    <button class="green" onclick="savePurchase()">Save Purchase & Update Stock</button>
-  </div>
-</section>
-
-<section id="purchaseHistory" class="page">
-  <h2>Purchase History</h2>
-
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Bill No.</th>
-            <th>Supplier</th>
-            <th>Medicine</th>
-            <th>Batch</th>
-            <th>Qty</th>
-            <th>Grand Total</th>
-            <th>Payment</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="purchaseRows"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-</main>
-</div>
-</div>
-
-<script>
-
-const firebaseConfig = {
-apiKey: "AIzaSyDbQ0psb_gGGiOUNwh1L91FZtnpheGwlAo",
-  authDomain: "shree-ram-medical-2c3dd.firebaseapp.com",
-  databaseURL: "https://shree-ram-medical-2c3dd-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "shree-ram-medical-2c3dd",
-  storageBucket: "shree-ram-medical-2c3dd.firebasestorage.app",
-  messagingSenderId: "160764705146",
-  appId: "1:160764705146:web:a46bafa50e9674a6337ec3"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.database();
-
-let medicines = {};
-let batches = {};
-let suppliers = {};
-let purchases = {};
-
-let currentUid = "";
-
-function $(id){
-  return document.getElementById(id);
-}
-
-function showPage(pageId,button){
-
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.remove("active");
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      showMessage("loginMessage", error.message);
+    }
   });
 
-  $(pageId).classList.add("active");
-
-  document.querySelectorAll("aside button").forEach(btn => {
-    btn.classList.remove("active");
+  $("logoutBtn").addEventListener("click", async () => {
+    await auth.signOut();
   });
 
-  if(button){
-    button.classList.add("active");
+  auth.onAuthStateChanged(async user => {
+    if (user) {
+      currentUser = user;
+
+      $("loginScreen").classList.add("hidden");
+      $("app").classList.remove("hidden");
+
+      $("purchaseDate").value = today();
+
+      await loadAllData();
+    } else {
+      currentUser = null;
+
+      $("loginScreen").classList.remove("hidden");
+      $("app").classList.add("hidden");
+    }
+  });
+
+  /* ================= DATABASE REFERENCES ================= */
+
+  function userRef(path) {
+    return db.ref("users/" + currentUser.uid + "/" + path);
   }
 
-  if(pageId === "batches"){
-    loadMedicineOptions();
+  async function loadAllData() {
+    if (!currentUser) return;
+
+    const snapshot = await userRef("").once("value");
+    const data = snapshot.val() || {};
+
+    medicines = data.medicines || {};
+    batches = data.batches || {};
+    suppliers = data.suppliers || {};
+    purchases = data.purchases || {};
+
+    renderAll();
   }
 
-  if(pageId === "purchase"){
-    loadPurchaseOptions();
-  }
-}
+  /* ================= NAVIGATION ================= */
 
-function status(message){
-  $("status").textContent = message;
-}
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      const pageId = button.dataset.page;
 
-auth.onAuthStateChanged(user => {
+      document.querySelectorAll(".nav-btn").forEach(item => {
+        item.classList.remove("active");
+      });
 
-  if(user){
+      document.querySelectorAll(".section-page").forEach(page => {
+        page.classList.remove("active");
+      });
 
-    currentUid = user.uid;
+      button.classList.add("active");
 
-    $("loginScreen").style.display = "none";
-    $("app").style.display = "block";
-    $("userEmail").textContent = user.email || "";
+      const page = $(pageId);
 
-    loadAllData();
+      if (page) {
+        page.classList.add("active");
+      }
+    });
+  });
 
-  }else{
+  /* ================= MEDICINE MASTER ================= */
 
-    $("loginScreen").style.display = "flex";
-    $("app").style.display = "none";
-  }
-});
+  $("medicineForm").addEventListener("submit", async event => {
+    event.preventDefault();
 
-$("loginForm").addEventListener("submit",async event => {
+    if (!currentUser) return;
 
-  event.preventDefault();
+    const medicine = {
+      name: $("medicineName").value.trim(),
+      company: $("medicineCompany").value.trim(),
+      category: $("medicineCategory").value.trim(),
+      generic: $("medicineGeneric").value.trim(),
+      pack: $("medicinePack").value.trim(),
+      barcode: $("medicineBarcode").value.trim(),
+      createdAt: Date.now()
+    };
 
-  $("error").textContent = "Login हो रहा है...";
-
-  try{
-
-    await auth.signInWithEmailAndPassword(
-      $("loginEmail").value.trim(),
-      $("loginPassword").value
-    );
-
-    $("error").textContent = "";
-
-  }catch(error){
-
-    $("error").textContent = error.message;
-  }
-});
-
-function basePath(name){
-  return "users/" + currentUid + "/" + name;
-}
-
-function loadAllData(){
-
-  db.ref(basePath("medicines")).on("value",snapshot => {
-    medicines = snapshot.val() || {};
-    renderMedicines();
-    loadMedicineOptions();
-    loadPurchaseOptions();
-    renderDashboard();
-  },error => status("Medicine error: " + error.message));
-
-  db.ref(basePath("batches")).on("value",snapshot => {
-    batches = snapshot.val() || {};
-    renderBatches();
-    renderDashboard();
-  },error => status("Batch error: " + error.message));
-
-  db.ref(basePath("suppliers")).on("value",snapshot => {
-    suppliers = snapshot.val() || {};
-    renderSuppliers();
-    loadSupplierOptions();
-    renderDashboard();
-  },error => status("Supplier error: " + error.message));
-
-  db.ref(basePath("purchases")).on("value",snapshot => {
-    purchases = snapshot.val() || {};
-    renderPurchases();
-    renderDashboard();
-  },error => status("Purchase error: " + error.message));
-
-  status("Firebase Database connected successfully.");
-}
-
-$("medicineForm").addEventListener("submit",async event => {
-
-  event.preventDefault();
-
-  const ref = db.ref(basePath("medicines")).push();
-
-  const data = {
-    name: $("medicineName").value.trim(),
-    company: $("company").value.trim(),
-    salt: $("salt").value.trim(),
-    hsn: $("hsn").value.trim(),
-    gst: Number($("gst").value || 0),
-    reorder: Number($("reorder").value || 0),
-    createdAt: Date.now()
-  };
-
-  try{
-
-    await ref.set(data);
-    event.target.reset();
-    alert("Medicine save हो गई।");
-
-  }catch(error){
-
-    alert(error.message);
-  }
-});
-
-$("batchForm").addEventListener("submit",async event => {
-
-  event.preventDefault();
-
-  const medicineId = $("batchMedicine").value;
-
-  if(!medicineId){
-    alert("Medicine select करें।");
-    return;
-  }
-
-  const ref = db.ref(basePath("batches")).push();
-
-  const data = {
-    medicineId: medicineId,
-    batchNumber: $("batchNumber").value.trim(),
-    expiryDate: $("expiryDate").value,
-    quantity: Number($("quantity").value || 0),
-    purchaseRate: Number($("purchaseRate").value || 0),
-    mrp: Number($("mrp").value || 0),
-    createdAt: Date.now()
-  };
-
-  try{
-
-    await ref.set(data);
-    event.target.reset();
-    alert("Batch save हो गया।");
-
-  }catch(error){
-
-    alert(error.message);
-  }
-});
-
-$("supplierForm").addEventListener("submit",async event => {
-
-  event.preventDefault();
-
-  const ref = db.ref(basePath("suppliers")).push();
-
-  const data = {
-    name: $("supplierName").value.trim(),
-    mobile: $("supplierMobile").value.trim(),
-    gstin: $("supplierGstin").value.trim(),
-    address: $("supplierAddress").value.trim(),
-    createdAt: Date.now()
-  };
-
-  try{
-
-    await ref.set(data);
-    event.target.reset();
-    alert("Supplier save हो गया।");
-
-  }catch(error){
-
-    alert(error.message);
-  }
-});
-
-function renderMedicines(){
-
-  const rows = Object.entries(medicines).map(([id,item]) => `
-    <tr>
-      <td>${escapeHtml(item.name)}</td>
-      <td>${escapeHtml(item.company || "")}</td>
-      <td>${escapeHtml(item.salt || "")}</td>
-      <td>${Number(item.gst || 0)}%</td>
-      <td>
-        <button class="red" onclick="deleteMedicine('${id}')">Delete</button>
-      </td>
-    </tr>
-  `).join("");
-
-  $("medicineRows").innerHTML = rows || `
-    <tr><td colspan="5">अभी कोई medicine नहीं है।</td></tr>
-  `;
-}
-
-function renderBatches(){
-
-  const rows = Object.entries(batches).map(([id,item]) => {
-
-    const medicine = medicines[item.medicineId] || {};
-    const days = getDaysRemaining(item.expiryDate);
-
-    let state = "OK";
-    let cls = "";
-
-    if(days < 0){
-      state = "Expired";
-      cls = "red";
-    }else if(days <= 90){
-      state = "Near Expiry";
-      cls = "red";
+    if (!medicine.name) {
+      alert("Medicine name डालें");
+      return;
     }
 
-    return `
+    try {
+      const key = userRef("medicines").push().key;
+
+      await userRef("medicines/" + key).set(medicine);
+
+      $("medicineForm").reset();
+
+      alert("Medicine successfully saved");
+
+      await loadAllData();
+    } catch (error) {
+      alert("Medicine save error: " + error.message);
+    }
+  });
+
+  function renderMedicines() {
+    const body = $("medicineTableBody");
+    const list = Object.entries(medicines);
+
+    if (!list.length) {
+      body.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty">No medicines found</td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    body.innerHTML = list.map(([id, medicine], index) => `
       <tr>
-        <td>${escapeHtml(medicine.name || "Unknown")}</td>
-        <td>${escapeHtml(item.batchNumber || "")}</td>
-        <td>${escapeHtml(item.expiryDate || "")}</td>
-        <td>${Number(item.quantity || 0)}</td>
-        <td>₹${Number(item.purchaseRate || 0).toFixed(2)}</td>
-        <td>₹${Number(item.mrp || 0).toFixed(2)}</td>
-        <td><span class="badge ${cls}">${state}</span></td>
+        <td>${index + 1}</td>
+        <td>${escapeHTML(medicine.name)}</td>
+        <td>${escapeHTML(medicine.company)}</td>
+        <td>${escapeHTML(medicine.category)}</td>
+        <td>${escapeHTML(medicine.pack)}</td>
         <td>
-          <button class="red" onclick="deleteBatch('${id}')">Delete</button>
+          <button class="btn danger" onclick="deleteMedicine('${id}')">
+            Delete
+          </button>
         </td>
       </tr>
+    `).join("");
+  }
+
+  window.deleteMedicine = async function(id) {
+    const medicine = medicines[id];
+
+    if (!medicine) return;
+
+    const confirmed = confirm(
+      "क्या आप यह medicine delete करना चाहते हैं?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await userRef("medicines/" + id).remove();
+      await loadAllData();
+    } catch (error) {
+      alert("Delete error: " + error.message);
+    }
+  };
+
+  /* ================= SUPPLIER MASTER ================= */
+
+  $("supplierForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (!currentUser) return;
+
+    const supplier = {
+      name: $("supplierName").value.trim(),
+      mobile: $("supplierMobile").value.trim(),
+      gst: $("supplierGST").value.trim(),
+      address: $("supplierAddress").value.trim(),
+      openingBalance: Number($("supplierOpeningBalance").value || 0),
+      createdAt: Date.now()
+    };
+
+    if (!supplier.name) {
+      alert("Supplier name डालें");
+      return;
+    }
+
+    try {
+      const key = userRef("suppliers").push().key;
+
+      await userRef("suppliers/" + key).set(supplier);
+
+      $("supplierForm").reset();
+
+      alert("Supplier successfully saved");
+
+      await loadAllData();
+    } catch (error) {
+      alert("Supplier save error: " + error.message);
+    }
+  });
+
+  function renderSuppliers() {
+    const body = $("supplierTableBody");
+    const list = Object.entries(suppliers);
+
+    if (!list.length) {
+      body.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty">No suppliers found</td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    body.innerHTML = list.map(([id, supplier], index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${escapeHTML(supplier.name)}</td>
+        <td>${escapeHTML(supplier.mobile)}</td>
+        <td>${escapeHTML(supplier.gst)}</td>
+        <td>${money(supplier.openingBalance)}</td>
+        <td>
+          <button class="btn danger" onclick="deleteSupplier('${id}')">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  window.deleteSupplier = async function(id) {
+    const supplier = suppliers[id];
+
+    if (!supplier) return;
+
+    const confirmed = confirm(
+      "क्या आप यह supplier delete करना चाहते हैं?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await userRef("suppliers/" + id).remove();
+      await loadAllData();
+    } catch (error) {
+      alert("Delete error: " + error.message);
+    }
+  };
+
+  /* ================= DROPDOWN OPTIONS ================= */
+
+  function fillMedicineDropdown() {
+    const select = $("purchaseMedicine");
+
+    const currentValue = select.value;
+
+    select.innerHTML = `
+      <option value="">Select Medicine</option>
     `;
-  }).join("");
 
-  $("batchRows").innerHTML = rows || `
-    <tr><td colspan="8">अभी कोई batch नहीं है।</td></tr>
-  `;
-}
+    Object.entries(medicines).forEach(([id, medicine]) => {
+      select.innerHTML += `
+        <option value="${id}">
+          ${escapeHTML(medicine.name)}
+        </option>
+      `;
+    });
 
-function renderSuppliers(){
+    if (medicines[currentValue]) {
+      select.value = currentValue;
+    }
+  }
 
-  const rows = Object.entries(suppliers).map(([id,item]) => `
-    <tr>
-      <td>${escapeHtml(item.name || "")}</td>
-      <td>${escapeHtml(item.mobile || "")}</td>
-      <td>${escapeHtml(item.gstin || "")}</td>
-      <td>${escapeHtml(item.address || "")}</td>
-      <td>
-        <button class="red" onclick="deleteSupplier('${id}')">Delete</button>
-      </td>
-    </tr>
-  `).join("");
+  function fillSupplierDropdown() {
+    const select = $("purchaseSupplier");
 
-  $("supplierRows").innerHTML = rows || `
-    <tr><td colspan="5">अभी कोई supplier नहीं है।</td></tr>
-  `;
-}
+    const currentValue = select.value;
 
-function loadMedicineOptions(){
+    select.innerHTML = `
+      <option value="">Select Supplier</option>
+    `;
 
-  const options = Object.entries(medicines).map(([id,item]) => `
-    <option value="${id}">${escapeHtml(item.name || "")}</option>
-  `).join("");
+    Object.entries(suppliers).forEach(([id, supplier]) => {
+      select.innerHTML += `
+        <option value="${id}">
+          ${escapeHTML(supplier.name)}
+        </option>
+      `;
+    });
 
-  $("batchMedicine").innerHTML =
-    `<option value="">Select medicine</option>${options}`;
-}
+    if (suppliers[currentValue]) {
+      select.value = currentValue;
+    }
+  }
 
-function loadSupplierOptions(){
+  /* ================= PURCHASE CALCULATION ================= */
 
-  const options = Object.entries(suppliers).map(([id,item]) => `
-    <option value="${id}">${esca
+  function calculatePurchase() {
+    const quantity = Number($("purchaseQty").value || 0);
+    const rate = Number($("purchaseRate").value || 0);
+    const discountPercent = Number($("purchaseDiscount").value || 0);
+    const gstPercent = Number($("purchaseGST").value || 0);
+
+    const gross = quantity * rate;
+    const discountAmount = gross * discountPercent / 100;
+    const taxableAmount = gross - discountAmount;
+    const gstAmount = taxableAmount * gstPercent / 100;
+    const grandTotal = taxableAmount + gstAmount;
+
+    $("purchaseGross").value = gross.toFixed(2);
+    $("purchaseDiscountAmount").value = discountAmount.toFixed(2);
+    $("purchaseGSTAmount").value = gstAmount.toFixed(2);
+    $("purchaseGrandTotal").value = grandTotal.toFixed(2);
+
+    return {
+      gross,
+      discountAmount,
+      gstAmount,
+      grandTotal
+    };
+  }
+
+  [
+    "purchaseQty",
+    "purchaseRate",
+    "purchaseDiscount",
+    "purchaseGST"
+  ].forEach(id => {
+    $(id).addEventListener("input", calculatePurchase);
+  });
+
+  /* ================= PURCHASE ENTRY ================= */
+
+  $("purchaseForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (!currentUser) return;
+
+    clearMessage("purchaseMessage");
+
+    const supplierId = $("purchaseSupplier").value;
+    const medicineId = $("purchaseMedicine").value;
+
+    if (!supplierId) {
+      showMessage("purchaseMessage", "Supplier select करें");
+      return;
+    }
+
+    if (!medicineId) {
+      showMessage("purchaseMessage", "Medicine select करें");
+      return;
+    }
+
+    const medicine = medicines[medicineId];
+    const supplier = suppliers[supplierId];
+
+    if (!medicine || !supplier) {
+      showMessage("purchaseMessage", "Medicine या supplier नहीं मिला");
+      return;
+    }
+
+    const quantity = Number($("purchaseQty").value || 0);
+    const freeQty = Number($("purchaseFreeQty").value || 0);
+    const rate = Number($("purchaseRate").value || 0);
+    const mrp = Number($("purchaseMRP").value || 0);
+
+    if (quantity <= 0) {
+      showMessage("purchaseMessage", "Quantity 0 से अधिक होनी चाहिए");
+      return;
+    }
+
+    const calculation = calculatePurchase();
+
+    const purchase = {
+      billNo: $("purchaseBillNo").value.trim(),
+      date: $("purchaseDate").value,
+      supplierId,
+      supplierName: supplier.name,
+      medicineId,
+      medicineName: medicine.name,
+      batchNo: $("purchaseBatchNo").value.trim(),
+      expiry: $("purchaseExpiry").value,
+      quantity,
+      freeQty,
+      totalQuantity: quantity + freeQty,
+      purchaseRate: rate,
+      mrp,
+      discountPercent: Number($("purchaseDiscount").value || 0),
+      discountAmount: calculation.discountAmount,
+      gstPercent: Number($("purchaseGST").value || 0),
+      gstAmount: calculation.gstAmount,
+      grossAmount: calculation.gross,
+      grandTotal: calculation.grandTotal,
+      paymentMode: $("purchasePaymentMode").value,
+      remarks: $("purchaseRemarks").value.trim(),
+      createdAt: Date.now()
+    };
+
+    if (!purchase.billNo) {
+      showMessage("purchaseMessage", "Bill number डालें");
+      return;
+    }
+
+    if (!purchase.batchNo) {
+      showMessage("purchaseMessage", "Batch number डालें");
+      return;
+    }
+
+    try {
+      const purchaseKey = userRef("purchases").push().key;
+
+      const batchList = Object.entries(batches);
+
+      const existingBatch = batchList.find(([id, batch]) => {
+        return (
+          batch.medicineId === medicineId &&
+          String(batch.batchNo).toLowerCase() ===
+          String(purchase.batchNo).toLowerCase()
+        );
+      });
+
+      const updates = {};
+
+      updates["purchases/" + purchaseKey] = purchase;
+
+      if (existingBatch) {
+        const batchId = existingBatch[0];
+        const oldBatch = existingBatch[1];
+
+        updates["batches/" + batchId] = {
+          ...oldBatch,
+          quantity: Number(oldBatch.quantity || 0) + quantity,
+          freeQty: Number(oldBatch.freeQty || 0) + freeQty,
+          totalQuantity:
+            Number(oldBatch.totalQuantity || 0) + quantity + freeQty,
+          purchaseRate: rate,
+          mrp,
+          expiry: purchase.expiry,
+          updatedAt: Date.now()
+        };
+      } else {
+        const batchKey = userRef("batches").push().key;
+
+        updates["batches/" + batchKey] = {
+          medicineId,
+          medicineName: medicine.name,
+          batchNo: purchase.batchNo,
+          expiry: purchase.expiry,
+          quantity,
+          freeQty,
+          totalQuantity: quantity + freeQty,
+          purchaseRate: rate,
+          mrp,
+          createdAt: Date.now()
+        };
+      }
+
+      await userRef("").update(updates);
+
+      $("purchaseForm").reset();
+      $("purchaseDate").value = today();
+
+      calculatePurchase();
+
+      showMessage(
+        "purchaseMessage",
+        "Purchase saved और stock update हो गया",
+        true
+      );
+
+      await loadAllData();
+    } catch (error) {
+      showMessage(
+        "purchaseMessage",
+        "Purchase save error: " + error.message
+      );
+    }
+  });
+
+  /* ================= BATCH STOCK ================= */
+
+  function renderBatches() {
+    const body = $("batchTableBody");
+    const list = Object.entries(batches);
+
+    if (!list.length) {
+      body.innerHTML = `
+        <tr>
+          <td colspan="8" class="empty">No stock found</td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    body.innerHTML = list.map(([id, batch], index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${escapeHTML(batch.medicineName)}</td>
+        <td>${escapeHTML(batch.batchNo)}</td>
+        <td>${escapeHTML(batch.expiry)}</td>
+        <td>${Number(batch.quantity || 0)}</td>
+        <td>${Number(batch.freeQty || 0)}</td>
+        <td>${money(batch.purchaseRate)}</td>
+        <td>${money(batch.mrp)}</td>
+      </tr>
+    `).join("");
+  }
+
+  /* ================= PURCHASE HISTORY ================= */
+
+  function renderPurchases() {
+    const body = $("purchaseTableBody");
+    const list = Object.entries(purchases)
+      .sort((a, b) => {
+        return Number(b[1].createdAt || 0) -
+               Number(a[1].createdAt || 0);
+      });
+
+    if (!list.length) {
+      body.innerHTML = `
+        <tr>
+          <td colspan="10" class="empty">
+            No purchase records found
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    body.innerHTML = list.map(([id, purchase], index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${escapeHTML(purchase.billNo)}</td>
+        <td>${escapeHTML(purchase.date)}</td>
+        <td>${escapeHTML(purchase.supplierName)}</td>
+        <td>${escapeHTML(purchase.medicineName)}</td>
+        <td>${escapeHTML(purchase.batchNo)}</td>
+        <td>${Number(purchase.totalQuantity || 0)}</td>
+        <td>${money(purchase.grandTotal)}</td>
+        <td>${escapeHTML(purchase.paymentMode)}</td>
+        <td>
+          <button class="btn danger" onclick="deletePurchase('${id}')">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  window.deletePurchase = async function(id) {
+    const purchase = purchases[id];
+
+    if (!purchase) return;
+
+    const confirmed = confirm(
+      "Purchase record delete करना है? ध्यान दें: इससे stock अपने आप कम नहीं होगा।"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await userRef("purchases/" + id).remove();
+
+      alert("Purchase record deleted");
+
+      await loadAllData();
+    } catch (error) {
+      alert("Delete error: " + error.message);
+    }
+  };
+
+  /* ================= DASHBOARD ================= */
+
+  function renderDashboard() {
+    $("totalMedicines").textContent =
+      Object.keys(medicines).length;
+
+    $("totalBatches").textContent =
+      Object.keys(batches).length;
+
+    $("totalSuppliers").textContent =
+      Object.keys(suppliers).length;
+
+    const totalPurchase = Object.values(purchases).reduce(
+      (sum, purchase) => {
+        return sum + Number(purchase.grandTotal || 0);
+      },
+      0
+    );
+
+    $("totalPurchase").textContent = money(totalPurchase);
+  }
+
+  /* ================= RENDER ALL ================= */
+
+  function renderAll() {
+    renderDashboard();
+    renderMedicines();
+    renderBatches();
+    renderSuppliers();
+    renderPurchases();
+    fillMedicineDropdown();
+    fillSupplierDropdown();
+    calculatePurchase();
+  }
+</script>
+
+</body>
+</html>

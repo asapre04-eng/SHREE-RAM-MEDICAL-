@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Shree Ram Medical - Pharmacy ERP</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -11,262 +11,60 @@
 
 <style>
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f7fb;
-  color:#172033;
-}
-
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
 button,input,select{font:inherit}
-
-button{
-  border:0;
-  border-radius:9px;
-  padding:11px 15px;
-  background:#155eef;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-
+button{border:0;border-radius:8px;padding:10px 14px;background:#155eef;color:white;font-weight:bold;cursor:pointer}
 button.red{background:#dc2626}
 button.gray{background:#e2e8f0;color:#172033}
-
-header{
-  background:linear-gradient(135deg,#123b91,#155eef);
-  color:white;
-  padding:17px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+button.green{background:#15803d}
+header{background:linear-gradient(135deg,#123b91,#155eef);color:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+header h2{margin:0;font-size:21px}
+.layout{display:flex;min-height:calc(100vh - 70px)}
+aside{width:235px;background:#0f172a;padding:12px}
+aside button{display:block;width:100%;text-align:left;background:transparent;color:#cbd5e1;margin:4px 0}
+aside button.active,aside button:hover{background:#1d4ed8;color:white}
+main{flex:1;min-width:0;padding:20px}
+.page{display:none}.page.active{display:block}
+.card{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.metric{font-size:27px;font-weight:bold;margin-top:8px}
+.small{font-size:13px;color:#64748b}
+form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:13px;font-weight:bold}
+input,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:white}
+.actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;background:white}
+th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:13px;white-space:nowrap}
+th{background:#eff6ff}
+.badge{padding:4px 8px;border-radius:18px;background:#dcfce7;color:#15803d;font-size:12px}
+.badge.red{background:#fee2e2;color:#dc2626}
+.total-box{background:#eff6ff;border-radius:10px;padding:14px;font-weight:bold}
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0f2c70,#155eef)}
+.loginBox{background:white;width:100%;max-width:390px;padding:25px;border-radius:18px}
+.loginBox h1{color:#123b91;margin-top:0}
+#error{color:#dc2626;font-size:13px;margin-top:10px}
+#app{display:none}
+@media(max-width:850px){
+ aside{width:70px;padding:8px 5px}
+ aside button{font-size:0;text-align:center}
+ aside button:first-letter{font-size:20px}
+ main{padding:12px}
+ .grid{grid-template-columns:repeat(2,1fr)}
+ form{grid-template-columns:1fr 1fr}
 }
-
-header h2{
-  margin:0;
-  font-size:21px;
-}
-
-.layout{
-  display:flex;
-  min-height:calc(100vh - 75px);
-}
-
-aside{
-  width:230px;
-  background:#0f172a;
-  padding:15px;
-}
-
-aside button{
-  display:block;
-  width:100%;
-  text-align:left;
-  background:transparent;
-  color:#cbd5e1;
-  margin:5px 0;
-}
-
-aside button.active,
-aside button:hover{
-  background:#1d4ed8;
-  color:white;
-}
-
-main{
-  flex:1;
-  padding:20px;
-  min-width:0;
-}
-
-.page{display:none}
-.page.active{display:block}
-
-.card{
-  background:white;
-  border:1px solid #e2e8f0;
-  border-radius:15px;
-  padding:17px;
-  margin-bottom:17px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-
-.metric{
-  font-size:28px;
-  font-weight:bold;
-  margin-top:8px;
-}
-
-.small{
-  font-size:13px;
-  color:#64748b;
-}
-
-form{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
-
-.field{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-
-.field label{
-  font-size:13px;
-  font-weight:bold;
-}
-
-input,select{
-  padding:11px;
-  border:1px solid #cbd5e1;
-  border-radius:8px;
-  width:100%;
-  background:white;
-}
-
-.actions{
-  grid-column:1/-1;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.table-wrap{
-  overflow:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-}
-
-th,td{
-  padding:11px;
-  border-bottom:1px solid #e2e8f0;
-  text-align:left;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-th{
-  background:#eff6ff;
-}
-
-.badge{
-  padding:4px 8px;
-  border-radius:20px;
-  background:#dcfce7;
-  color:#15803d;
-  font-size:12px;
-}
-
-.badge.red{
-  background:#fee2e2;
-  color:#dc2626;
-}
-
-#loginScreen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:linear-gradient(135deg,#0f2c70,#155eef);
-}
-
-.loginBox{
-  background:white;
-  width:100%;
-  max-width:390px;
-  padding:25px;
-  border-radius:18px;
-}
-
-.loginBox h1{
-  margin-top:0;
-  color:#123b91;
-}
-
-.loginBox input{
-  margin:7px 0 12px;
-}
-
-#error{
-  color:#dc2626;
-  font-size:13px;
-  margin:8px 0;
-}
-
-#app{
-  display:none;
-}
-
-#status{
-  overflow-wrap:anywhere;
-}
-
-@media(max-width:800px){
-  aside{
-    width:70px;
-    padding:10px 6px;
-  }
-
-  aside button{
-    font-size:0;
-    text-align:center;
-  }
-
-  aside button:first-letter{
-    font-size:20px;
-  }
-
-  main{
-    padding:12px;
-  }
-
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  form{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media(max-width:500px){
-  form{
-    grid-template-columns:1fr;
-  }
-
-  .grid{
-    gap:8px;
-  }
-
-  .metric{
-    font-size:23px;
-  }
-
-  header h2{
-    font-size:16px;
-  }
+@media(max-width:520px){
+ form{grid-template-columns:1fr}
+ .grid{gap:8px}
+ .metric{font-size:22px}
+ header h2{font-size:16px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN SCREEN -->
 <section id="loginScreen">
   <div class="loginBox">
     <h1>🩺 Shree Ram Medical</h1>
@@ -275,32 +73,23 @@ th{
     <form id="loginForm">
       <div class="field">
         <label>Email</label>
-        <input
-          id="loginEmail"
-          type="email"
-          required
-          placeholder="Admin email"
-        >
+        <input id="loginEmail" type="email" required>
       </div>
 
       <div class="field">
         <label>Password</label>
-        <input
-          id="loginPassword"
-          type="password"
-          required
-          placeholder="Password"
-        >
+        <input id="loginPassword" type="password" required>
       </div>
 
-      <button type="submit">Login</button>
+      <div class="actions">
+        <button type="submit">Login</button>
+      </div>
     </form>
 
     <div id="error"></div>
   </div>
 </section>
 
-<!-- MAIN APP -->
 <div id="app">
 
 <header>
@@ -308,29 +97,22 @@ th{
     <h2>🩺 Shree Ram Medical</h2>
     <small id="userEmail"></small>
   </div>
-
   <button class="gray" onclick="logout()">Logout</button>
 </header>
 
 <div class="layout">
 
 <aside>
-  <button class="active" onclick="showPage('dashboard',this)">
-    📊 Dashboard
-  </button>
-
-  <button onclick="showPage('medicines',this)">
-    💊 Medicines
-  </button>
-
-  <button onclick="showPage('batches',this)">
-    📦 Batch Stock
-  </button>
+  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showPage('medicines',this)">💊 Medicines</button>
+  <button onclick="showPage('batches',this)">📦 Stock</button>
+  <button onclick="showPage('suppliers',this)">🏢 Suppliers</button>
+  <button onclick="showPage('purchase',this)">🧾 Purchase</button>
+  <button onclick="showPage('purchaseHistory',this)">📚 Purchase History</button>
 </aside>
 
 <main>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="page active">
   <h2>Dashboard</h2>
 
@@ -341,7 +123,7 @@ th{
     </div>
 
     <div class="card">
-      <div class="small">Total Stock Units</div>
+      <div class="small">Stock Units</div>
       <div class="metric" id="stockCount">0</div>
     </div>
 
@@ -356,74 +138,68 @@ th{
     </div>
   </div>
 
+  <div class="grid">
+    <div class="card">
+      <div class="small">Total Purchase</div>
+      <div class="metric" id="purchaseTotal">₹0</div>
+    </div>
+
+    <div class="card">
+      <div class="small">Total Suppliers</div>
+      <div class="metric" id="supplierCount">0</div>
+    </div>
+  </div>
+
   <div class="card">
-    <h3>Firebase Status</h3>
-    <p id="status">Login के बाद Firebase Database status यहाँ दिखेगा।</p>
+    <h3>System Status</h3>
+    <p id="status">Login के बाद Firebase status दिखेगा।</p>
   </div>
 </section>
 
-<!-- MEDICINES -->
 <section id="medicines" class="page">
   <h2>Medicine Master</h2>
 
   <div class="card">
     <form id="medicineForm">
-
       <div class="field">
         <label>Medicine Name *</label>
-        <input
-          id="medicineName"
-          required
-          placeholder="Paracetamol 500mg"
-        >
+        <input id="medicineName" required placeholder="Paracetamol 500mg">
       </div>
 
       <div class="field">
         <label>Company</label>
-        <input id="company" placeholder="Company name">
+        <input id="company">
       </div>
 
       <div class="field">
         <label>Composition / Salt</label>
-        <input id="salt" placeholder="Composition">
+        <input id="salt">
       </div>
 
       <div class="field">
         <label>HSN Code</label>
-        <input id="hsn" placeholder="HSN">
+        <input id="hsn">
       </div>
 
       <div class="field">
         <label>GST %</label>
-        <input
-          id="gst"
-          type="number"
-          value="12"
-          min="0"
-        >
+        <input id="gst" type="number" min="0" value="12">
       </div>
 
       <div class="field">
         <label>Reorder Level</label>
-        <input
-          id="reorder"
-          type="number"
-          value="10"
-          min="0"
-        >
+        <input id="reorder" type="number" min="0" value="10">
       </div>
 
       <div class="actions">
         <button type="submit">Save Medicine</button>
         <button type="reset" class="gray">Reset</button>
       </div>
-
     </form>
   </div>
 
   <div class="card">
     <h3>Medicine List</h3>
-
     <div class="table-wrap">
       <table>
         <thead>
@@ -435,26 +211,20 @@ th{
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody id="medicineRows"></tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- BATCH STOCK -->
 <section id="batches" class="page">
   <h2>Batch Stock</h2>
 
   <div class="card">
     <form id="batchForm">
-
       <div class="field">
         <label>Medicine *</label>
-
-        <select id="batchMedicine" required>
-          <option value="">Select medicine</option>
-        </select>
+        <select id="batchMedicine" required></select>
       </div>
 
       <div class="field">
@@ -469,47 +239,28 @@ th{
 
       <div class="field">
         <label>Quantity *</label>
-        <input
-          id="quantity"
-          type="number"
-          min="0"
-          required
-        >
+        <input id="quantity" type="number" min="0" required>
       </div>
 
       <div class="field">
         <label>Purchase Rate</label>
-        <input
-          id="purchaseRate"
-          type="number"
-          min="0"
-          step="0.01"
-          value="0"
-        >
+        <input id="purchaseRate" type="number" min="0" step="0.01" value="0">
       </div>
 
       <div class="field">
         <label>MRP</label>
-        <input
-          id="mrp"
-          type="number"
-          min="0"
-          step="0.01"
-          value="0"
-        >
+        <input id="mrp" type="number" min="0" step="0.01" value="0">
       </div>
 
       <div class="actions">
         <button type="submit">Save Batch</button>
         <button type="reset" class="gray">Reset</button>
       </div>
-
     </form>
   </div>
 
   <div class="card">
     <h3>Batch List</h3>
-
     <div class="table-wrap">
       <table>
         <thead>
@@ -518,13 +269,191 @@ th{
             <th>Batch</th>
             <th>Expiry</th>
             <th>Qty</th>
+            <th>Purchase Rate</th>
             <th>MRP</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody id="batchRows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="suppliers" class="page">
+  <h2>Supplier Master</h2>
+
+  <div class="card">
+    <form id="supplierForm">
+      <div class="field">
+        <label>Supplier Name *</label>
+        <input id="supplierName" required>
+      </div>
+
+      <div class="field">
+        <label>Mobile</label>
+        <input id="supplierMobile" type="tel">
+      </div>
+
+      <div class="field">
+        <label>GSTIN</label>
+        <input id="supplierGstin">
+      </div>
+
+      <div class="field">
+        <label>Address</label>
+        <input id="supplierAddress">
+      </div>
+
+      <div class="actions">
+        <button type="submit">Save Supplier</button>
+        <button type="reset" class="gray">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Supplier List</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>GSTIN</th>
+            <th>Address</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="supplierRows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="purchase" class="page">
+  <h2>Purchase Entry</h2>
+
+  <div class="card">
+    <form id="purchaseForm">
+
+      <div class="field">
+        <label>Bill Number *</label>
+        <input id="purchaseBillNo" required>
+      </div>
+
+      <div class="field">
+        <label>Bill Date *</label>
+        <input id="purchaseDate" type="date" required>
+      </div>
+
+      <div class="field">
+        <label>Supplier *</label>
+        <select id="purchaseSupplier" required></select>
+      </div>
+
+      <div class="field">
+        <label>Medicine *</label>
+        <select id="purchaseMedicine" required></select>
+      </div>
+
+      <div class="field">
+        <label>Batch Number *</label>
+        <input id="purchaseBatch" required>
+      </div>
+
+      <div class="field">
+        <label>Expiry Date *</label>
+        <input id="purchaseExpiry" type="date" required>
+      </div>
+
+      <div class="field">
+        <label>Quantity *</label>
+        <input id="purchaseQty" type="number" min="1" required>
+      </div>
+
+      <div class="field">
+        <label>Free Quantity</label>
+        <input id="freeQty" type="number" min="0" value="0">
+      </div>
+
+      <div class="field">
+        <label>Purchase Rate *</label>
+        <input id="purchaseItemRate" type="number" min="0" step="0.01" required>
+      </div>
+
+      <div class="field">
+        <label>MRP *</label>
+        <input id="purchaseMrp" type="number" min="0" step="0.01" required>
+      </div>
+
+      <div class="field">
+        <label>Discount %</label>
+        <input id="purchaseDiscount" type="number" min="0" value="0">
+      </div>
+
+      <div class="field">
+        <label>GST %</label>
+        <input id="purchaseGst" type="number" min="0" value="12">
+      </div>
+
+      <div class="field">
+        <label>Payment Mode</label>
+        <select id="paymentMode">
+          <option value="Cash">Cash</option>
+          <option value="Credit">Credit</option>
+          <option value="UPI">UPI</option>
+          <option value="Bank">Bank</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Remarks</label>
+        <input id="purchaseRemarks">
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="calculatePurchase()">Calculate</button>
+      </div>
+    </form>
+
+    <br>
+
+    <div class="total-box">
+      <div>Gross Amount: ₹<span id="grossAmount">0.00</span></div>
+      <div>Discount Amount: ₹<span id="discountAmount">0.00</span></div>
+      <div>GST Amount: ₹<span id="gstAmount">0.00</span></div>
+      <hr>
+      <div>Grand Total: ₹<span id="grandTotal">0.00</span></div>
+    </div>
+
+    <br>
+
+    <button class="green" onclick="savePurchase()">Save Purchase & Update Stock</button>
+  </div>
+</section>
+
+<section id="purchaseHistory" class="page">
+  <h2>Purchase History</h2>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Bill No.</th>
+            <th>Supplier</th>
+            <th>Medicine</th>
+            <th>Batch</th>
+            <th>Qty</th>
+            <th>Grand Total</th>
+            <th>Payment</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="purchaseRows"></tbody>
       </table>
     </div>
   </div>
@@ -534,11 +463,10 @@ th{
 </div>
 </div>
 
-<!-- ALL JAVASCRIPT MUST REMAIN INSIDE THIS ONE SCRIPT -->
 <script>
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDbQ0psb_gGGiOUNwh1L91FZtnpheGwlAo",
+  apiKey: "अपनी_FIREBASE_WEB_API_KEY_यहाँ_डालें",
   authDomain: "shree-ram-medical-2c3dd.firebaseapp.com",
   databaseURL: "https://shree-ram-medical-2c3dd-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "shree-ram-medical-2c3dd",
@@ -554,31 +482,22 @@ const db = firebase.database();
 
 let medicines = {};
 let batches = {};
-let currentUserPath = null;
+let suppliers = {};
+let purchases = {};
+
+let currentUid = "";
 
 function $(id){
   return document.getElementById(id);
 }
 
-function setStatus(message){
-  const status = $("status");
-
-  if(status){
-    status.textContent = message;
-  }
-}
-
-function showPage(pageId, button){
+function showPage(pageId,button){
 
   document.querySelectorAll(".page").forEach(page => {
     page.classList.remove("active");
   });
 
-  const page = $(pageId);
-
-  if(page){
-    page.classList.add("active");
-  }
+  $(pageId).classList.add("active");
 
   document.querySelectorAll("aside button").forEach(btn => {
     btn.classList.remove("active");
@@ -591,33 +510,36 @@ function showPage(pageId, button){
   if(pageId === "batches"){
     loadMedicineOptions();
   }
+
+  if(pageId === "purchase"){
+    loadPurchaseOptions();
+  }
+}
+
+function status(message){
+  $("status").textContent = message;
 }
 
 auth.onAuthStateChanged(user => {
 
-  console.log("Auth user:", user);
-
   if(user){
+
+    currentUid = user.uid;
 
     $("loginScreen").style.display = "none";
     $("app").style.display = "block";
-
     $("userEmail").textContent = user.email || "";
 
-    setStatus("Login सफल। Firebase Database load हो रहा है...");
-
-    loadFirebaseData(user.uid);
+    loadAllData();
 
   }else{
 
     $("loginScreen").style.display = "flex";
     $("app").style.display = "none";
-
-    $("userEmail").textContent = "";
   }
 });
 
-$("loginForm").addEventListener("submit", async event => {
+$("loginForm").addEventListener("submit",async event => {
 
   event.preventDefault();
 
@@ -634,94 +556,54 @@ $("loginForm").addEventListener("submit", async event => {
 
   }catch(error){
 
-    console.error("Login error:", error);
-
-    $("error").textContent = getFirebaseError(error);
+    $("error").textContent = error.message;
   }
 });
 
-function loadFirebaseData(uid){
-
-  currentUserPath = "users/" + uid;
-
-  const medicinePath = currentUserPath + "/medicines";
-  const batchPath = currentUserPath + "/batches";
-
-  db.ref(medicinePath).off();
-  db.ref(batchPath).off();
-
-  db.ref(medicinePath).on(
-    "value",
-
-    snapshot => {
-
-      medicines = snapshot.val() || {};
-
-      renderMedicines();
-      loadMedicineOptions();
-      renderDashboard();
-
-      setStatus("Firebase Database connected successfully.");
-
-    },
-
-    error => {
-
-      console.error("Medicine database error:", error);
-
-      setStatus(
-        "Medicine data load नहीं हुआ: " + error.message
-      );
-    }
-  );
-
-  db.ref(batchPath).on(
-    "value",
-
-    snapshot => {
-
-      batches = snapshot.val() || {};
-
-      renderBatches();
-      renderDashboard();
-
-    },
-
-    error => {
-
-      console.error("Batch database error:", error);
-
-      setStatus(
-        "Batch data load नहीं हुआ: " + error.message
-      );
-    }
-  );
+function basePath(name){
+  return "users/" + currentUid + "/" + name;
 }
 
-$("medicineForm").addEventListener("submit", async event => {
+function loadAllData(){
+
+  db.ref(basePath("medicines")).on("value",snapshot => {
+    medicines = snapshot.val() || {};
+    renderMedicines();
+    loadMedicineOptions();
+    loadPurchaseOptions();
+    renderDashboard();
+  },error => status("Medicine error: " + error.message));
+
+  db.ref(basePath("batches")).on("value",snapshot => {
+    batches = snapshot.val() || {};
+    renderBatches();
+    renderDashboard();
+  },error => status("Batch error: " + error.message));
+
+  db.ref(basePath("suppliers")).on("value",snapshot => {
+    suppliers = snapshot.val() || {};
+    renderSuppliers();
+    loadSupplierOptions();
+    renderDashboard();
+  },error => status("Supplier error: " + error.message));
+
+  db.ref(basePath("purchases")).on("value",snapshot => {
+    purchases = snapshot.val() || {};
+    renderPurchases();
+    renderDashboard();
+  },error => status("Purchase error: " + error.message));
+
+  status("Firebase Database connected successfully.");
+}
+
+$("medicineForm").addEventListener("submit",async event => {
 
   event.preventDefault();
 
-  const user = auth.currentUser;
+  const ref = db.ref(basePath("medicines")).push();
 
-  if(!user){
-    alert("पहले login करें।");
-    return;
-  }
-
-  const medicineName = $("medicineName").value.trim();
-
-  if(!medicineName){
-    alert("Medicine name डालें।");
-    return;
-  }
-
-  const medicineRef = db.ref(
-    "users/" + user.uid + "/medicines"
-  ).push();
-
-  const medicine = {
-    name: medicineName,
+  const data = {
+    name: $("medicineName").value.trim(),
     company: $("company").value.trim(),
     salt: $("salt").value.trim(),
     hsn: $("hsn").value.trim(),
@@ -732,52 +614,32 @@ $("medicineForm").addEventListener("submit", async event => {
 
   try{
 
-    await medicineRef.set(medicine);
-
+    await ref.set(data);
     event.target.reset();
-
-    alert("Medicine Firebase में save हो गई।");
+    alert("Medicine save हो गई।");
 
   }catch(error){
 
-    console.error("Save medicine error:", error);
-
-    alert("Medicine save नहीं हुई: " + error.message);
+    alert(error.message);
   }
 });
 
-$("batchForm").addEventListener("submit", async event => {
+$("batchForm").addEventListener("submit",async event => {
 
   event.preventDefault();
-
-  const user = auth.currentUser;
-
-  if(!user){
-    alert("पहले login करें।");
-    return;
-  }
 
   const medicineId = $("batchMedicine").value;
 
   if(!medicineId){
-    alert("पहले medicine select करें।");
+    alert("Medicine select करें।");
     return;
   }
 
-  const batchNumber = $("batchNumber").value.trim();
+  const ref = db.ref(basePath("batches")).push();
 
-  if(!batchNumber){
-    alert("Batch number डालें।");
-    return;
-  }
-
-  const batchRef = db.ref(
-    "users/" + user.uid + "/batches"
-  ).push();
-
-  const batch = {
+  const data = {
     medicineId: medicineId,
-    batchNumber: batchNumber,
+    batchNumber: $("batchNumber").value.trim(),
     expiryDate: $("expiryDate").value,
     quantity: Number($("quantity").value || 0),
     purchaseRate: Number($("purchaseRate").value || 0),
@@ -787,304 +649,130 @@ $("batchForm").addEventListener("submit", async event => {
 
   try{
 
-    await batchRef.set(batch);
-
+    await ref.set(data);
     event.target.reset();
-
-    alert("Batch Firebase में save हो गया।");
+    alert("Batch save हो गया।");
 
   }catch(error){
 
-    console.error("Save batch error:", error);
+    alert(error.message);
+  }
+});
 
-    alert("Batch save नहीं हुआ: " + error.message);
+$("supplierForm").addEventListener("submit",async event => {
+
+  event.preventDefault();
+
+  const ref = db.ref(basePath("suppliers")).push();
+
+  const data = {
+    name: $("supplierName").value.trim(),
+    mobile: $("supplierMobile").value.trim(),
+    gstin: $("supplierGstin").value.trim(),
+    address: $("supplierAddress").value.trim(),
+    createdAt: Date.now()
+  };
+
+  try{
+
+    await ref.set(data);
+    event.target.reset();
+    alert("Supplier save हो गया।");
+
+  }catch(error){
+
+    alert(error.message);
   }
 });
 
 function renderMedicines(){
 
-  const rows = Object.entries(medicines).map(([id, medicine]) => {
-
-    return `
-      <tr>
-        <td><b>${escapeHtml(medicine.name)}</b></td>
-        <td>${escapeHtml(medicine.company || "")}</td>
-        <td>${escapeHtml(medicine.salt || "")}</td>
-        <td>${Number(medicine.gst || 0)}%</td>
-        <td>
-          <button
-            class="red"
-            onclick="deleteMedicine('${id}')"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    `;
-
-  }).join("");
+  const rows = Object.entries(medicines).map(([id,item]) => `
+    <tr>
+      <td>${escapeHtml(item.name)}</td>
+      <td>${escapeHtml(item.company || "")}</td>
+      <td>${escapeHtml(item.salt || "")}</td>
+      <td>${Number(item.gst || 0)}%</td>
+      <td>
+        <button class="red" onclick="deleteMedicine('${id}')">Delete</button>
+      </td>
+    </tr>
+  `).join("");
 
   $("medicineRows").innerHTML = rows || `
-    <tr>
-      <td colspan="5">अभी कोई medicine नहीं है।</td>
-    </tr>
-  `;
-}
-
-function loadMedicineOptions(){
-
-  const select = $("batchMedicine");
-
-  if(!select){
-    return;
-  }
-
-  const options = Object.entries(medicines).map(([id, medicine]) => {
-
-    return `
-      <option value="${id}">
-        ${escapeHtml(medicine.name || "Unnamed Medicine")}
-      </option>
-    `;
-
-  }).join("");
-
-  select.innerHTML = `
-    <option value="">Select medicine</option>
-    ${options}
+    <tr><td colspan="5">अभी कोई medicine नहीं है।</td></tr>
   `;
 }
 
 function renderBatches(){
 
-  const rows = Object.entries(batches).map(([id, batch]) => {
+  const rows = Object.entries(batches).map(([id,item]) => {
 
-    const medicine = medicines[batch.medicineId] || {};
-    const days = getDaysRemaining(batch.expiryDate);
+    const medicine = medicines[item.medicineId] || {};
+    const days = getDaysRemaining(item.expiryDate);
 
-    let status = "OK";
-    let className = "";
+    let state = "OK";
+    let cls = "";
 
     if(days < 0){
-
-      status = "Expired";
-      className = "red";
-
+      state = "Expired";
+      cls = "red";
     }else if(days <= 90){
-
-      status = "Near Expiry";
-      className = "red";
+      state = "Near Expiry";
+      cls = "red";
     }
 
     return `
       <tr>
         <td>${escapeHtml(medicine.name || "Unknown")}</td>
-        <td>${escapeHtml(batch.batchNumber || "")}</td>
-        <td>${escapeHtml(batch.expiryDate || "")}</td>
-        <td>${Number(batch.quantity || 0)}</td>
-        <td>₹${Number(batch.mrp || 0).toFixed(2)}</td>
+        <td>${escapeHtml(item.batchNumber || "")}</td>
+        <td>${escapeHtml(item.expiryDate || "")}</td>
+        <td>${Number(item.quantity || 0)}</td>
+        <td>₹${Number(item.purchaseRate || 0).toFixed(2)}</td>
+        <td>₹${Number(item.mrp || 0).toFixed(2)}</td>
+        <td><span class="badge ${cls}">${state}</span></td>
         <td>
-          <span class="badge ${className}">
-            ${status}
-          </span>
-        </td>
-        <td>
-          <button
-            class="red"
-            onclick="deleteBatch('${id}')"
-          >
-            Delete
-          </button>
+          <button class="red" onclick="deleteBatch('${id}')">Delete</button>
         </td>
       </tr>
     `;
-
   }).join("");
 
   $("batchRows").innerHTML = rows || `
-    <tr>
-      <td colspan="7">अभी कोई batch नहीं है।</td>
-    </tr>
+    <tr><td colspan="8">अभी कोई batch नहीं है।</td></tr>
   `;
 }
 
-function renderDashboard(){
+function renderSuppliers(){
 
-  const medicineList = Object.values(medicines);
-  const batchList = Object.values(batches);
+  const rows = Object.entries(suppliers).map(([id,item]) => `
+    <tr>
+      <td>${escapeHtml(item.name || "")}</td>
+      <td>${escapeHtml(item.mobile || "")}</td>
+      <td>${escapeHtml(item.gstin || "")}</td>
+      <td>${escapeHtml(item.address || "")}</td>
+      <td>
+        <button class="red" onclick="deleteSupplier('${id}')">Delete</button>
+      </td>
+    </tr>
+  `).join("");
 
-  $("medicineCount").textContent = medicineList.length;
-
-  $("stockCount").textContent = batchList.reduce(
-    (total, batch) => {
-      return total + Number(batch.quantity || 0);
-    },
-    0
-  );
-
-  $("lowCount").textContent = batchList.filter(batch => {
-
-    const medicine = medicines[batch.medicineId];
-
-    if(!medicine){
-      return false;
-    }
-
-    return Number(batch.quantity || 0) <=
-      Number(medicine.reorder || 0);
-
-  }).length;
-
-  $("expiryCount").textContent = batchList.filter(batch => {
-
-    return getDaysRemaining(batch.expiryDate) <= 90;
-
-  }).length;
+  $("supplierRows").innerHTML = rows || `
+    <tr><td colspan="5">अभी कोई supplier नहीं है।</td></tr>
+  `;
 }
 
-async function deleteMedicine(id){
+function loadMedicineOptions(){
 
-  const confirmDelete = confirm(
-    "Medicine और उससे जुड़े सभी batches delete करें?"
-  );
+  const options = Object.entries(medicines).map(([id,item]) => `
+    <option value="${id}">${escapeHtml(item.name || "")}</option>
+  `).join("");
 
-  if(!confirmDelete){
-    return;
-  }
-
-  const user = auth.currentUser;
-
-  if(!user){
-    alert("पहले login करें।");
-    return;
-  }
-
-  try{
-
-    await db.ref(
-      "users/" + user.uid + "/medicines/" + id
-    ).remove();
-
-    const relatedBatches = Object.entries(batches)
-      .filter(([batchId, batch]) => {
-        return batch.medicineId === id;
-      });
-
-    for(const [batchId] of relatedBatches){
-
-      await db.ref(
-        "users/" + user.uid + "/batches/" + batchId
-      ).remove();
-    }
-
-    alert("Medicine delete हो गई।");
-
-  }catch(error){
-
-    console.error("Delete medicine error:", error);
-
-    alert("Delete नहीं हुआ: " + error.message);
-  }
+  $("batchMedicine").innerHTML =
+    `<option value="">Select medicine</option>${options}`;
 }
 
-async function deleteBatch(id){
+function loadSupplierOptions(){
 
-  const confirmDelete = confirm(
-    "क्या यह batch delete करना है?"
-  );
-
-  if(!confirmDelete){
-    return;
-  }
-
-  const user = auth.currentUser;
-
-  if(!user){
-    alert("पहले login करें।");
-    return;
-  }
-
-  try{
-
-    await db.ref(
-      "users/" + user.uid + "/batches/" + id
-    ).remove();
-
-    alert("Batch delete हो गया।");
-
-  }catch(error){
-
-    console.error("Delete batch error:", error);
-
-    alert("Batch delete नहीं हुआ: " + error.message);
-  }
-}
-
-function getDaysRemaining(date){
-
-  if(!date){
-    return 999999;
-  }
-
-  const today = new Date();
-
-  today.setHours(0,0,0,0);
-
-  const expiry = new Date(date);
-
-  expiry.setHours(0,0,0,0);
-
-  return Math.ceil(
-    (expiry - today) / 86400000
-  );
-}
-
-function escapeHtml(value){
-
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-
-    character => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[character])
-  );
-}
-
-function getFirebaseError(error){
-
-  const errorCode = error && error.code
-    ? error.code
-    : "";
-
-  const messages = {
-    "auth/invalid-email":"Email सही नहीं है।",
-    "auth/user-not-found":"यह email registered नहीं है।",
-    "auth/wrong-password":"Password गलत है।",
-    "auth/invalid-credential":"Email या password गलत है।",
-    "auth/too-many-requests":"बहुत ज्यादा प्रयास हुए हैं। बाद में कोशिश करें।",
-    "auth/network-request-failed":"Internet connection check करें।"
-  };
-
-  return messages[errorCode] ||
-    (error.message || "Login failed");
-}
-
-function logout(){
-
-  auth.signOut()
-    .then(() => {
-      console.log("Logout successful");
-    })
-    .catch(error => {
-      alert("Logout error: " + error.message);
-    });
-}
-
-</script>
-
-</body>
-       </html>
+  const options = Object.entries(suppliers).map(([id,item]) => `
+    <option value="${id}">${esca

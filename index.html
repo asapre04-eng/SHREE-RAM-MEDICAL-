@@ -1312,56 +1312,7 @@
           </div>
  </section>
         
-        <!-- ================= SALES & BILLING PAGE ================= -->
-
-<section id="salesPage" class="section-page">
-
-  <div class="page-title">Sales & Billing</div>
-
-  <!-- CUSTOMER DETAILS -->
-  <div class="section">
-
-    <h2>Customer Details</h2>
-
-    <div class="form-grid">
-
-      <div class="input-group">
-        <label>Invoice Number</label>
-        <input id="saleInvoiceNo" readonly>
-      </div>
-
-      <div class="input-group">
-        <label>Sale Date</label>
-        <input id="saleDate" type="date">
-      </div>
-
-      <div class="input-group">
-        <label>Customer Name</label>
-        <input id="customerName" placeholder="Customer name">
-      </div>
-
-      <div class="input-group">
-        <label>Customer Mobile</label>
-        <input
-          id="customerMobile"
-          type="tel"
-          placeholder="Mobile number"
-        >
-      </div>
-
-      <div class="input-group">
-        <label>Payment Mode</label>
-        <select id="salePaymentMode">
-          <option value="Cash">Cash</option>
-          <option value="UPI">UPI</option>
-          <option value="Card">Card</option>
-          <option value="Credit">Credit</option>
-        </select>
-      </div>
-
-    </div>
-
-  </div>
+        
 
   <!-- MEDICINE SELECTION -->
   <div class="section">
@@ -1452,17 +1403,219 @@
 
   </div>
 
+<!-- ================= SALES & BILLING PAGE ================= -->
+
+<section id="salesPage" class="section-page">
+
+  <div class="page-title">Sales & Billing</div>
+
+  <!-- BILL HEADER -->
+  <div class="section">
+
+    <h2>🧾 New Sale / Invoice</h2>
+
+    <div class="form-grid">
+
+      <div class="input-group">
+        <label>Invoice Number</label>
+        <input id="saleInvoiceNo" readonly>
+      </div>
+
+      <div class="input-group">
+        <label>Sale Date</label>
+        <input id="saleDate" type="date">
+      </div>
+
+      <div class="input-group">
+        <label>Customer Name</label>
+        <input
+          id="customerName"
+          placeholder="Customer name"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Customer Mobile</label>
+        <input
+          id="customerMobile"
+          type="tel"
+          maxlength="10"
+          placeholder="Mobile number"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Payment Mode</label>
+
+        <select id="salePaymentMode">
+
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Card">Card</option>
+          <option value="Credit">Credit</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ADD MEDICINE -->
+  <div class="section">
+
+    <h2>💊 Add Medicine</h2>
+
+    <div class="form-grid">
+
+      <div class="input-group">
+
+        <label>Medicine</label>
+
+        <select id="saleMedicine">
+
+          <option value="">
+            Select Medicine
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Batch</label>
+
+        <select id="saleBatch">
+
+          <option value="">
+            Select Batch
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Available Stock</label>
+
+        <input
+          id="saleAvailableStock"
+          readonly
+          placeholder="0"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>MRP</label>
+
+        <input
+          id="saleMRP"
+          readonly
+          placeholder="0.00"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Quantity</label>
+
+        <input
+          id="saleQty"
+          type="number"
+          min="1"
+          value="1"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Discount %</label>
+
+        <input
+          id="saleDiscount"
+          type="number"
+          min="0"
+          max="100"
+          step="0.01"
+          value="0"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>GST %</label>
+
+        <input
+          id="saleGST"
+          type="number"
+          min="0"
+          step="0.01"
+          value="0"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn success"
+        id="addSaleItemBtn"
+      >
+        + Add to Bill
+      </button>
+
+
+      <button
+        type="button"
+        class="btn gray"
+        id="resetSaleItemBtn"
+      >
+        Reset Item
+      </button>
+
+    </div>
+
+
+    <div
+      id="saleItemMessage"
+      class="message"
+    ></div>
+
+  </div>
+
+
   <!-- BILL ITEMS -->
   <div class="section">
 
-    <h2>Bill Items</h2>
+    <h2>🛒 Bill Items</h2>
 
     <div class="table-wrap">
 
       <table>
 
         <thead>
+
           <tr>
+
             <th>Sr.</th>
             <th>Medicine</th>
             <th>Batch</th>
@@ -1473,15 +1626,23 @@
             <th>GST</th>
             <th>Total</th>
             <th>Action</th>
+
           </tr>
+
         </thead>
+
 
         <tbody id="saleItemsBody">
 
           <tr>
-            <td colspan="10" class="empty">
+
+            <td
+              colspan="10"
+              class="empty"
+            >
               अभी कोई medicine bill में नहीं है
             </td>
+
           </tr>
 
         </tbody>
@@ -1491,7 +1652,196 @@
     </div>
 
   </div>
-</section>
+
+
+  <!-- BILL SUMMARY -->
+  <div class="section">
+
+    <h2>💰 Bill Summary</h2>
+
+    <div class="form-grid">
+
+      <div class="input-group">
+
+        <label>Gross Amount</label>
+
+        <input
+          id="saleGross"
+          readonly
+          value="0.00"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Total Discount</label>
+
+        <input
+          id="saleDiscountAmount"
+          readonly
+          value="0.00"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Total GST</label>
+
+        <input
+          id="saleGSTAmount"
+          readonly
+          value="0.00"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Grand Total</label>
+
+        <input
+          id="saleGrandTotal"
+          readonly
+          value="0.00"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div
+      style="
+        margin-top:20px;
+        padding:18px;
+        background:#eff6ff;
+        border-radius:14px;
+        text-align:right;
+      "
+    >
+
+      <span
+        style="
+          display:block;
+          color:#64748b;
+          font-size:14px;
+          margin-bottom:5px;
+        "
+      >
+        Payable Amount
+      </span>
+
+
+      <strong
+        id="salePayableAmount"
+        style="
+          display:block;
+          font-size:30px;
+          color:#1d4ed8;
+        "
+      >
+        ₹0.00
+      </strong>
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn success"
+        id="saveSaleBtn"
+      >
+        💾 Save Bill
+      </button>
+
+
+      <button
+        type="button"
+        class="btn warning"
+        id="printSaleBtn"
+      >
+        🖨️ Print Bill
+      </button>
+
+
+      <button
+        type="button"
+        class="btn gray"
+        id="resetSaleBtn"
+      >
+        ↻ New Bill
+      </button>
+
+    </div>
+
+
+    <div
+      id="saleMessage"
+      class="message"
+    ></div>
+
+  </div>
+
+
+  <!-- CUSTOMER PAYMENT -->
+  <div class="section">
+
+    <h2>💳 Payment Details</h2>
+
+    <div class="form-grid">
+
+      <div class="input-group">
+
+        <label>Bill Total</label>
+
+        <input
+          id="salePaymentTotal"
+          readonly
+          value="0.00"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Received Amount</label>
+
+        <input
+          id="saleReceivedAmount"
+          type="number"
+          min="0"
+          step="0.01"
+          value="0"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>Balance / Due</label>
+
+        <input
+          id="saleDueAmount"
+          readonly
+          value="0.00"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+  </section>
          <!-- SUPPLIER PAGE -->
         <section id="supplierPage" class="section-page">
           <div class="page-title">Supplier Master</div>

@@ -1863,9 +1863,13 @@
     purchases = data.purchases || {};
     sales = data.sales || {};
 
+    renderAll();
+  }
+
     /* ================= DASHBOARD PAGE NAVIGATION ================= */
 
 window.openDashboardPage = function(pageId) {
+
   document.querySelectorAll(".nav-btn").forEach(button => {
     button.classList.remove("active");
   });
@@ -1888,10 +1892,6 @@ window.openDashboardPage = function(pageId) {
     navButton.classList.add("active");
   }
 };
-
-    renderAll();
-  }
-
   /* ================= NAVIGATION ================= */
 
   document.querySelectorAll(".nav-btn").forEach(button => {

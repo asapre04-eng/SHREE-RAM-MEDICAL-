@@ -880,6 +880,36 @@
   }
 
 }
+    /* ================= FIX: 5 ITEM BOTTOM NAV ================= */
+
+.main-nav {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.main-nav .nav-btn {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  box-sizing: border-box;
+  flex: none !important;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .main-nav {
+    height: 68px;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .main-nav .nav-btn {
+    height: 68px;
+    width: 100% !important;
+  }
+  }
   </style>
 </head>
 
@@ -986,15 +1016,9 @@
   </div>
 
 </section>
-    <!-- बाकी सभी pages -->
-    <!-- dashboardPage -->
-    <!-- medicinePage -->
-    <!-- batchPage -->
-    <!-- supplierPage -->
-    <!-- purchasePage -->
-    <!-- salesPage -->
-    <!-- purchaseHistoryPage -->
-
+<!-- dashboardPage -->
+<!-- medicinePage -->
+<!-- batchPage -->
   </main>
 
   <!-- ================= BOTTOM NAVIGATION ================= -->

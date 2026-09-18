@@ -1863,6 +1863,32 @@
     purchases = data.purchases || {};
     sales = data.sales || {};
 
+    /* ================= DASHBOARD PAGE NAVIGATION ================= */
+
+window.openDashboardPage = function(pageId) {
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.remove("active");
+  });
+
+  document.querySelectorAll(".section-page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  const targetPage = document.getElementById(pageId);
+
+  if (targetPage) {
+    targetPage.classList.add("active");
+  }
+
+  const navButton = document.querySelector(
+    '.nav-btn[data-page="' + pageId + '"]'
+  );
+
+  if (navButton) {
+    navButton.classList.add("active");
+  }
+};
+
     renderAll();
   }
 

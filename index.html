@@ -4171,6 +4171,39 @@ if ($("saleInvoiceNo")) {
 
   initializeNewSale();       
 }
+
+
+/* ================= BOTTOM NAVIGATION ================= */
+
+document.querySelectorAll(".main-nav .nav-btn").forEach(button => {
+
+  button.addEventListener("click", function () {
+
+    const pageId = this.getAttribute("data-page");
+
+    /* Hide all pages */
+    document.querySelectorAll(".section-page").forEach(page => {
+      page.style.display = "none";
+    });
+
+    /* Show selected page */
+    const selectedPage = document.getElementById(pageId);
+
+    if (selectedPage) {
+      selectedPage.style.display = "block";
+    }
+
+    /* Active navigation button */
+    document.querySelectorAll(".main-nav .nav-btn").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    this.classList.add("active");
+
+  });
+
+});
+
 </script>
 
 </body>

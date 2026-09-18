@@ -2891,6 +2891,1138 @@ function renderDashboard() {
     fillSupplierDropdown();
     calculatePurchase();
   }
+    
+    /* =========================================================
+   SALES & BILLING MODULE
+   PART 2
+========================================================= */
+
+let saleItems = [];
+let saleSaved = false;
+
+
+/* ================= INVOICE NUMBER ================= */
+
+function generateSaleInvoiceNo() {
+
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  const random = Math.floor(1000 + Math.random() * 9000);
+
+  return "INV-" + year + month + day + "-" + random;
+}
+
+
+/* ================= RESET SALE ITEM ================= */
+
+function resetSaleItemFields() {
+
+  $("saleMedicine").value = "";
+  $("saleBatch").innerHTML = `
+    <option value="">Select Batch</option>
+  `;
+
+  $("saleAvailableStock").value = "";
+  $("saleMRP").value = "";
+  $("saleQty").value = "1";
+  $("saleDiscount").value = "0";
+  $("saleGST").value = "0";
+
+  clearMessage("saleItemMessage");
+}
+
+
+/* ================= INITIALIZE NEW SALE ================= */
+
+function initializeNewSale() {
+
+  saleItems = [];
+  saleSaved = false;
+
+  $("saleInvoiceNo").value = generateSaleInvoiceNo();
+  $("saleDate").value = today();
+
+  $("customerName").value = "";
+  $("customerMobile").value = "";
+
+  $("salePaymentMode").value = "Cash";
+
+  resetSaleItemFields();
+
+  renderSaleItems();
+  calculateSaleTotal();
+
+  $("saleReceivedAmount").value = "0";
+  $("saleDueAmount").value = "0.00";
+  $("salePaymentTotal").value = "0.00";
+
+  clearMessage("saleMessage");
+}
+
+
+/* ================= FILL SALES MEDICINE DROPDOWN ================= */
+
+function fillSaleMedicineDropdown() {
+
+  const select = $("saleMedicine");
+
+  if (!select) return;
+
+  const currentValue = select.value;
+
+  select.innerHTML = `
+    <option value="">Select Medicine</option>
+  `;
+
+  Object.entries(medicines).forEach(([id, medicine]) => {
+
+    select.innerHTML += `
+      <option value="${id}">
+        ${escapeHTML(medicine.name)}
+      </option>
+    `;
+
+  });
+
+  if (medicines[currentValue]) {
+    select.value = currentValue;
+  }
+}
+
+
+/* ================= MEDICINE SELECT ================= */
+
+$("saleMedicine").addEventListener("change", function() {
+
+  const medicineId = this.value;
+
+  const batchSelect = $("saleBatch");
+
+  batchSelect.innerHTML = `
+    <option value="">Select Batch</option>
+  `;
+
+  $("saleAvailableStock").value = "";
+  $("saleMRP").value = "";
+
+  if (!medicineId) return;
+
+
+  const medicineBatches = Object.entries(batches)
+    .filter(([id, batch]) => {
+
+      return (
+        batch.medicineId === medicineId &&
+        Number(batch.totalQuantity || 0) > 0
+      );
+
+    });
+
+
+  medicineBatches.forEach(([id, batch]) => {
+
+    batchSelect.innerHTML += `
+      <option value="${id}">
+        ${escapeHTML(batch.batchNo)}
+        | Exp: ${escapeHTML(batch.expiry)}
+        | Stock: ${Number(batch.totalQuantity || 0)}
+        | MRP: ${Number(batch.mrp || 0).toFixed(2)}
+      </option>
+    `;
+
+  });
+
+
+  if (!medicineBatches.length) {
+
+    batchSelect.innerHTML = `
+      <option value="">
+        No Stock Available
+      </option>
+    `;
+
+    showMessage(
+      "saleItemMessage",
+      "इस medicine का कोई available stock नहीं है"
+    );
+
+  }
+
+});
+
+
+/* ================= BATCH SELECT ================= */
+
+$("saleBatch").addEventListener("change", function() {
+
+  const batchId = this.value;
+
+  const batch = batches[batchId];
+
+  $("saleAvailableStock").value = "";
+  $("saleMRP").value = "";
+
+  if (!batch) return;
+
+  $("saleAvailableStock").value =
+    Number(batch.totalQuantity || 0);
+
+  $("saleMRP").value =
+    Number(batch.mrp || 0).toFixed(2);
+
+});
+
+
+/* ================= ADD SALE ITEM ================= */
+
+$("addSaleItemBtn").addEventListener("click", function() {
+
+  clearMessage("saleItemMessage");
+
+  const medicineId = $("saleMedicine").value;
+  const batchId = $("saleBatch").value;
+
+  const quantity = Number(
+    $("saleQty").value || 0
+  );
+
+  const discountPercent = Number(
+    $("saleDiscount").value || 0
+  );
+
+  const gstPercent = Number(
+    $("saleGST").value || 0
+  );
+
+
+  if (!medicineId) {
+
+    showMessage(
+      "saleItemMessage",
+      "Medicine select करें"
+    );
+
+    return;
+  }
+
+
+  if (!batchId) {
+
+    showMessage(
+      "saleItemMessage",
+      "Batch select करें"
+    );
+
+    return;
+  }
+
+
+  const medicine = medicines[medicineId];
+  const batch = batches[batchId];
+
+
+  if (!medicine || !batch) {
+
+    showMessage(
+      "saleItemMessage",
+      "Medicine या Batch नहीं मिला"
+    );
+
+    return;
+  }
+
+
+  if (quantity <= 0) {
+
+    showMessage(
+      "saleItemMessage",
+      "Quantity 0 से अधिक होनी चाहिए"
+    );
+
+    return;
+  }
+
+
+  const availableStock =
+    Number(batch.totalQuantity || 0);
+
+
+  if (quantity > availableStock) {
+
+    showMessage(
+      "saleItemMessage",
+      "Available stock केवल " +
+      availableStock +
+      " है"
+    );
+
+    return;
+  }
+
+
+  if (
+    discountPercent < 0 ||
+    discountPercent > 100
+  ) {
+
+    showMessage(
+      "saleItemMessage",
+      "Discount 0 से 100% के बीच होना चाहिए"
+    );
+
+    return;
+  }
+
+
+  if (gstPercent < 0) {
+
+    showMessage(
+      "saleItemMessage",
+      "GST सही डालें"
+    );
+
+    return;
+  }
+
+
+  const mrp =
+    Number(batch.mrp || 0);
+
+
+  const gross =
+    quantity * mrp;
+
+
+  const discountAmount =
+    gross * discountPercent / 100;
+
+
+  const taxableAmount =
+    gross - discountAmount;
+
+
+  const gstAmount =
+    taxableAmount * gstPercent / 100;
+
+
+  const total =
+    taxableAmount + gstAmount;
+
+
+  /*
+    अगर वही medicine + वही batch पहले से bill में है,
+    तो नई row बनाने के बजाय quantity update होगी।
+  */
+
+  const existingIndex = saleItems.findIndex(item => {
+
+    return (
+      item.medicineId === medicineId &&
+      item.batchId === batchId
+    );
+
+  });
+
+
+  if (existingIndex >= 0) {
+
+    const existing = saleItems[existingIndex];
+
+    const newQuantity =
+      existing.quantity + quantity;
+
+
+    if (newQuantity > availableStock) {
+
+      showMessage(
+        "saleItemMessage",
+        "इस batch का available stock केवल " +
+        availableStock +
+        " है"
+      );
+
+      return;
+    }
+
+
+    existing.quantity = newQuantity;
+
+    existing.discountPercent =
+      discountPercent;
+
+    existing.gstPercent =
+      gstPercent;
+
+    existing.gross =
+      newQuantity * mrp;
+
+    existing.discountAmount =
+      existing.gross *
+      discountPercent / 100;
+
+    existing.taxableAmount =
+      existing.gross -
+      existing.discountAmount;
+
+    existing.gstAmount =
+      existing.taxableAmount *
+      gstPercent / 100;
+
+    existing.total =
+      existing.taxableAmount +
+      existing.gstAmount;
+
+  } else {
+
+    saleItems.push({
+
+      medicineId,
+
+      medicineName:
+        medicine.name,
+
+      batchId,
+
+      batchNo:
+        batch.batchNo,
+
+      expiry:
+        batch.expiry,
+
+      quantity,
+
+      mrp,
+
+      discountPercent,
+
+      discountAmount,
+
+      gstPercent,
+
+      gstAmount,
+
+      gross,
+
+      taxableAmount,
+
+      total
+
+    });
+
+  }
+
+
+  renderSaleItems();
+  calculateSaleTotal();
+
+  resetSaleItemFields();
+
+  showMessage(
+    "saleItemMessage",
+    "Medicine bill में add हो गई",
+    true
+  );
+
+});
+
+
+/* ================= RENDER SALE ITEMS ================= */
+
+function renderSaleItems() {
+
+  const body = $("saleItemsBody");
+
+  if (!body) return;
+
+
+  if (!saleItems.length) {
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="10" class="empty">
+          अभी कोई medicine bill में नहीं है
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+
+  body.innerHTML = saleItems.map(
+    (item, index) => {
+
+      return `
+        <tr>
+
+          <td>
+            ${index + 1}
+          </td>
+
+          <td>
+            ${escapeHTML(item.medicineName)}
+          </td>
+
+          <td>
+            ${escapeHTML(item.batchNo)}
+          </td>
+
+          <td>
+            ${Number(item.quantity)}
+          </td>
+
+          <td>
+            ${money(item.mrp)}
+          </td>
+
+          <td>
+            ${money(item.gross)}
+          </td>
+
+          <td>
+            ${money(item.discountAmount)}
+            <br>
+            <small>
+              ${Number(item.discountPercent || 0)}%
+            </small>
+          </td>
+
+          <td>
+            ${money(item.gstAmount)}
+            <br>
+            <small>
+              ${Number(item.gstPercent || 0)}%
+            </small>
+          </td>
+
+          <td>
+            <strong>
+              ${money(item.total)}
+            </strong>
+          </td>
+
+          <td>
+
+            <button
+              type="button"
+              class="btn danger"
+              onclick="removeSaleItem(${index})"
+            >
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+      `;
+
+    }
+  ).join("");
+
+}
+
+
+/* ================= REMOVE SALE ITEM ================= */
+
+window.removeSaleItem = function(index) {
+
+  if (
+    index < 0 ||
+    index >= saleItems.length
+  ) {
+    return;
+  }
+
+
+  const confirmed = confirm(
+    "क्या आप इस medicine को bill से हटाना चाहते हैं?"
+  );
+
+
+  if (!confirmed) return;
+
+
+  saleItems.splice(index, 1);
+
+  renderSaleItems();
+
+  calculateSaleTotal();
+
+};
+
+
+/* ================= SALE TOTAL CALCULATION ================= */
+
+function calculateSaleTotal() {
+
+  let gross = 0;
+  let discount = 0;
+  let gst = 0;
+  let grandTotal = 0;
+
+
+  saleItems.forEach(item => {
+
+    gross += Number(item.gross || 0);
+
+    discount += Number(
+      item.discountAmount || 0
+    );
+
+    gst += Number(
+      item.gstAmount || 0
+    );
+
+    grandTotal += Number(
+      item.total || 0
+    );
+
+  });
+
+
+  $("saleGross").value =
+    gross.toFixed(2);
+
+  $("saleDiscountAmount").value =
+    discount.toFixed(2);
+
+  $("saleGSTAmount").value =
+    gst.toFixed(2);
+
+  $("saleGrandTotal").value =
+    grandTotal.toFixed(2);
+
+
+  $("salePayableAmount").textContent =
+    money(grandTotal);
+
+
+  $("salePaymentTotal").value =
+    grandTotal.toFixed(2);
+
+
+  calculateSaleDue();
+
+}
+
+
+/* ================= RECEIVED / DUE ================= */
+
+$("saleReceivedAmount").addEventListener(
+  "input",
+  calculateSaleDue
+);
+
+
+function calculateSaleDue() {
+
+  const total =
+    Number(
+      $("saleGrandTotal").value || 0
+    );
+
+
+  const received =
+    Number(
+      $("saleReceivedAmount").value || 0
+    );
+
+
+  const due =
+    Math.max(
+      0,
+      total - received
+    );
+
+
+  $("saleDueAmount").value =
+    due.toFixed(2);
+
+}
+
+
+/* ================= RESET ITEM ================= */
+
+$("resetSaleItemBtn").addEventListener(
+  "click",
+  resetSaleItemFields
+);
+
+
+/* ================= NEW SALE ================= */
+
+$("resetSaleBtn").addEventListener(
+  "click",
+  function() {
+
+    const confirmed = confirm(
+      "Current bill clear करके नया bill बनाना है?"
+    );
+
+    if (!confirmed) return;
+
+    initializeNewSale();
+
+  }
+);
+
+
+/* ================= SAVE SALE ================= */
+
+$("saveSaleBtn").addEventListener(
+  "click",
+  async function() {
+
+    if (!currentUser) {
+
+      showMessage(
+        "saleMessage",
+        "पहले login करें"
+      );
+
+      return;
+    }
+
+
+    if (saleSaved) {
+
+      showMessage(
+        "saleMessage",
+        "यह bill पहले ही save हो चुका है"
+      );
+
+      return;
+    }
+
+
+    if (!saleItems.length) {
+
+      showMessage(
+        "saleMessage",
+        "Bill में कम से कम एक medicine add करें"
+      );
+
+      return;
+    }
+
+
+    const invoiceNo =
+      $("saleInvoiceNo").value.trim();
+
+
+    const saleDate =
+      $("saleDate").value || today();
+
+
+    const customerName =
+      $("customerName").value.trim();
+
+
+    const customerMobile =
+      $("customerMobile").value.trim();
+
+
+    const paymentMode =
+      $("salePaymentMode").value;
+
+
+    const receivedAmount =
+      Number(
+        $("saleReceivedAmount").value || 0
+      );
+
+
+    const grandTotal =
+      Number(
+        $("saleGrandTotal").value || 0
+      );
+
+
+    if (receivedAmount < 0) {
+
+      showMessage(
+        "saleMessage",
+        "Received amount सही डालें"
+      );
+
+      return;
+    }
+
+
+    if (
+      paymentMode !== "Credit" &&
+      receivedAmount < grandTotal
+    ) {
+
+      showMessage(
+        "saleMessage",
+        "Payment पूरा receive नहीं हुआ है"
+      );
+
+      return;
+    }
+
+
+    /*
+      Save से पहले stock फिर से verify करते हैं।
+      इससे पुराने खुले bill की वजह से गलत stock deduction नहीं होगा।
+    */
+
+    for (const item of saleItems) {
+
+      const currentBatch =
+        batches[item.batchId];
+
+
+      if (!currentBatch) {
+
+        showMessage(
+          "saleMessage",
+          item.medicineName +
+          " का batch नहीं मिला"
+        );
+
+        return;
+      }
+
+
+      const currentStock =
+        Number(
+          currentBatch.totalQuantity || 0
+        );
+
+
+      if (
+        item.quantity > currentStock
+      ) {
+
+        showMessage(
+          "saleMessage",
+          item.medicineName +
+          " में पर्याप्त stock नहीं है। Available: " +
+          currentStock
+        );
+
+        return;
+      }
+
+    }
+
+
+    try {
+
+      const saleKey =
+        userRef("sales").push().key;
+
+
+      let grossTotal = 0;
+      let discountTotal = 0;
+      let gstTotal = 0;
+      let finalTotal = 0;
+
+
+      saleItems.forEach(item => {
+
+        grossTotal +=
+          Number(item.gross || 0);
+
+        discountTotal +=
+          Number(item.discountAmount || 0);
+
+        gstTotal +=
+          Number(item.gstAmount || 0);
+
+        finalTotal +=
+          Number(item.total || 0);
+
+      });
+
+
+      const dueAmount =
+        Math.max(
+          0,
+          finalTotal - receivedAmount
+        );
+
+
+      const sale = {
+
+        invoiceNo,
+
+        date:
+          saleDate,
+
+        customerName,
+
+        customerMobile,
+
+        paymentMode,
+
+        items:
+          saleItems,
+
+        grossAmount:
+          grossTotal,
+
+        discountAmount:
+          discountTotal,
+
+        gstAmount:
+          gstTotal,
+
+        grandTotal:
+          finalTotal,
+
+        receivedAmount,
+
+        dueAmount,
+
+        createdAt:
+          Date.now(),
+
+        createdBy:
+          currentUser.uid
+
+      };
+
+
+      const updates = {};
+
+
+      /*
+        Sale record
+      */
+
+      updates[
+        "sales/" + saleKey
+      ] = sale;
+
+
+      /*
+        Stock deduction
+      */
+
+      saleItems.forEach(item => {
+
+        const batch =
+          batches[item.batchId];
+
+
+        const oldQuantity =
+          Number(
+            batch.quantity || 0
+          );
+
+
+        const oldFreeQty =
+          Number(
+            batch.freeQty || 0
+          );
+
+
+        let remainingSaleQty =
+          Number(item.quantity);
+
+
+        /*
+          पहले normal quantity से stock minus होगा
+        */
+
+        const normalDeduction =
+          Math.min(
+            oldQuantity,
+            remainingSaleQty
+          );
+
+
+        const newQuantity =
+          oldQuantity -
+          normalDeduction;
+
+
+        remainingSaleQty -=
+          normalDeduction;
+
+
+        /*
+          अगर normal quantity खत्म हो जाए
+          और sale quantity बाकी हो,
+          तो free quantity से minus करेंगे।
+        */
+
+        const freeDeduction =
+          Math.min(
+            oldFreeQty,
+            remainingSaleQty
+          );
+
+
+        const newFreeQty =
+          oldFreeQty -
+          freeDeduction;
+
+
+        const newTotalQuantity =
+          newQuantity +
+          newFreeQty;
+
+
+        updates[
+          "batches/" +
+          item.batchId
+        ] = {
+
+          ...batch,
+
+          quantity:
+            newQuantity,
+
+          freeQty:
+            newFreeQty,
+
+          totalQuantity:
+            newTotalQuantity,
+
+          updatedAt:
+            Date.now()
+
+        };
+
+      });
+
+
+      await userRef("").update(
+        updates
+      );
+
+
+      saleSaved = true;
+
+
+      showMessage(
+        "saleMessage",
+        "✅ Bill successfully saved और stock update हो गया",
+        true
+      );
+
+
+      /*
+        Data reload
+      */
+
+      await loadAllData();
+
+
+      /*
+        Sales के बाद नया bill number
+        तुरंत generate नहीं करेंगे।
+        Current saved bill print किया जा सकेगा।
+      */
+
+    } catch (error) {
+
+      console.error(
+        "Sale save error:",
+        error
+      );
+
+
+      showMessage(
+        "saleMessage",
+        "Sale save error: " +
+        error.message
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= UPDATE SALES DROPDOWN ================= */
+
+function renderSalesModule() {
+
+  fillSaleMedicineDropdown();
+
+  renderSaleItems();
+
+  calculateSaleTotal();
+
+}
+
+
+/* ================= DASHBOARD SEARCH ================= */
+
+$("dashboardSearch")?.addEventListener(
+  "input",
+  function() {
+
+    const value =
+      this.value.trim().toLowerCase();
+
+
+    if (!value) return;
+
+
+    const foundMedicine =
+      Object.values(medicines).find(
+        medicine =>
+          String(
+            medicine.name || ""
+          )
+          .toLowerCase()
+          .includes(value)
+      );
+
+
+    if (foundMedicine) {
+
+      console.log(
+        "Medicine found:",
+        foundMedicine.name
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= PATCH RENDER ALL ================= */
+
+/*
+  Existing renderAll() के साथ
+  Sales dropdown भी update होगा।
+*/
+
+const originalRenderAll =
+  renderAll;
+
+
+renderAll = function() {
+
+  originalRenderAll();
+
+  fillSaleMedicineDropdown();
+
+  renderSaleItems();
+
+  calculateSaleTotal();
+
+};
+
+
+/* ================= INITIAL SALE ================= */
+
+if ($("saleInvoiceNo")) {
+
+  initializeNewSale();       
+}
 </script>
 
 </body>

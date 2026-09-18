@@ -2383,27 +2383,122 @@
     }
   };
 
-  /* ================= DASHBOARD ================= */
 
-  function renderDashboard() {
+/* ================= PREMIUM DASHBOARD CALCULATIONS ================= */
+
+function renderDashboard() {
+
+  const batchList = Object.values(batches);
+  const purchaseList = Object.values(purchases);
+
+  const totalStockValue = batchList.reduce((sum, batch) => {
+    const quantity = Number(batch.totalQuantity || 0);
+    const mrp = Number(batch.mrp || 0);
+
+    return sum + (quantity * mrp);
+  }, 0);
+
+  const todayDate = new Date();
+  todayDate.setHours(0, 0, 0, 0);
+
+  let expiredValue = 0;
+  let expiredCount = 0;
+  let expiringSoonCount = 0;
+
+  batchList.forEach(batch => {
+
+    if (!batch.expiry) return;
+
+    const expiryDate = new Date(batch.expiry + "-01");
+    expiryDate.setHours(0, 0, 0, 0);
+
+    const quantity = Number(batch.totalQuantity || 0);
+    const mrp = Number(batch.mrp || 0);
+
+    if (expiryDate < todayDate) {
+      expiredValue += quantity * mrp;
+      expiredCount++;
+    } else {
+      const difference =
+        (expiryDate - todayDate) / (1000 * 60 * 60 * 24);
+
+      if (difference <= 30) {
+        expiringSoonCount++;
+      }
+    }
+  });
+
+  const totalPurchase = purchaseList.reduce((sum, purchase) => {
+    return sum + Number(purchase.grandTotal || 0);
+  }, 0);
+
+  const totalSales = Object.values(
+    typeof sales !== "undefined" ? sales : {}
+  ).reduce((sum, sale) => {
+    return sum + Number(sale.grandTotal || 0);
+  }, 0);
+
+  const totalProfit = totalSales - totalPurchase;
+
+  $("dashboardStockValue").textContent =
+    money(totalStockValue);
+
+  $("dashboardExpiredValue").textContent =
+    money(expiredValue);
+
+  $("dashboardPendingOrders").textContent =
+    money(0);
+
+  $("dashboardCashBalance").textContent =
+    money(totalSales);
+
+  $("dashboardSalesAmount").textContent =
+    money(totalSales);
+
+  $("dashboardPurchaseAmount").textContent =
+    money(totalPurchase);
+
+  $("dashboardProfitAmount").textContent =
+    money(totalProfit);
+
+  $("dashboardExpenseAmount").textContent =
+    money(0);
+
+  $("dashboardReceiveAmount").textContent =
+    money(0);
+
+  $("dashboardPayAmount").textContent =
+    money(totalPurchase);
+
+  $("dashboardExpiredCount").textContent =
+    expiredCount + " Medicines Expired";
+
+  $("dashboardExpiringCount").textContent =
+    expiringSoonCount + " Medicines Expiring Soon";
+
+  /* पुराने Dashboard IDs भी update रहेंगे */
+
+  if ($("totalMedicines")) {
     $("totalMedicines").textContent =
       Object.keys(medicines).length;
+  }
 
+  if ($("totalBatches")) {
     $("totalBatches").textContent =
       Object.keys(batches).length;
+  }
 
+  if ($("totalSuppliers")) {
     $("totalSuppliers").textContent =
       Object.keys(suppliers).length;
-
-    const totalPurchase = Object.values(purchases).reduce(
-      (sum, purchase) => {
-        return sum + Number(purchase.grandTotal || 0);
-      },
-      0
-    );
-
-    $("totalPurchase").textContent = money(totalPurchase);
   }
+
+  if ($("totalPurchase")) {
+    $("totalPurchase").textContent =
+      money(totalPurchase);
+  }
+  }
+  
 
   /* ================= RENDER ALL ================= */
 

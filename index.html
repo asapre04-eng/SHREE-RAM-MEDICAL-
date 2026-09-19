@@ -956,6 +956,15 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+    /* ================= INITIAL PAGE FIX ================= */
+
+.section-page {
+  display: none !important;
+}
+
+#dashboardPage {
+  display: block !important;
+}
   </style>
 </head>
 
@@ -4014,6 +4023,17 @@ document.querySelectorAll(".main-nav .nav-btn").forEach(button => {
   });
 
 });
+    /* ================= INITIAL PAGE ================= */
+
+document.querySelectorAll(".section-page").forEach(page => {
+  page.style.display = "none";
+});
+
+const dashboardPage = document.getElementById("dashboardPage");
+
+if (dashboardPage) {
+  dashboardPage.style.display = "block";
+}
 
 </script>
 
